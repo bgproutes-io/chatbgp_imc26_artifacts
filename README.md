@@ -29,7 +29,7 @@ Question identifiers in this repository do **not** correspond to the numbering u
 Repository numbering follows the ordering defined in:
 
 ```text
-code_generation/questions/questions.json
+question_generator/questions.json
 ```
 
 For example:
