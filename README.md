@@ -173,7 +173,7 @@ prompt_generator/code_runner.py
 
 # Prompt Generator
 
-## `prompt_generator/main.py`
+## 🚀 `prompt_generator/main.py`
 
 Generates prompts for few-shot learning.
 
