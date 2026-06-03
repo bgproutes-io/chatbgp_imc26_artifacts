@@ -11,13 +11,11 @@ The source code is provided exclusively for review purposes. All software remain
 # Repository Structure
 
 ```text
-
 bgpstream/              Prompt-engineered BGPStream implementations
 code_generation/        Code skeletons and prompt-generation artifacts
 download_size/          Download-volume estimation scripts
 evaluation/             Evaluation scripts and artifacts
 question_generator/     Question generation pipeline
-
 ```
 
 ---
