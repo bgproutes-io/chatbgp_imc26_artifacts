@@ -257,13 +257,3 @@ Compares:
 * `optimized_codes`
 
 using Jaccard similarity.
-
-## XoX Speed Evaluation
-
-Benchmarks use code skeletons from:
-
-```text
-code_generation/code_skeleton/
-```
-
-Replace macros/placeholders with concrete parameter values before execution.
