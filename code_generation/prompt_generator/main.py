@@ -298,7 +298,7 @@ final_answer
 
 ALWAYS save outputs as:
 
-answer_file = (f"/../../evaluation/eval_results/XoX/answer{question_id}.json")
+answer_file = (f"../../evaluation/eval_results/XoX/answer{question_id}.json")
 """
 
     with open(outfile, 'w') as fd:
