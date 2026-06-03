@@ -11,12 +11,13 @@ The source code is provided exclusively for review purposes. All software remain
 # Repository Structure
 
 ```text
-question_generator/     Question generation pipeline
-download_size/          Download-volume estimation scripts
-code_generation/        Code skeletons and generation artifacts
-prompt_generator/       Prompt construction and execution framework
+
 bgpstream/              Prompt-engineered BGPStream implementations
+code_generation/        Code skeletons and prompt-generation artifacts
+download_size/          Download-volume estimation scripts
 evaluation/             Evaluation scripts and artifacts
+question_generator/     Question generation pipeline
+
 ```
 
 ---
@@ -78,7 +79,7 @@ question_generator/
 
 Original set of 39 questions.
 
-### `questions_template.json`
+### `questions_all_template.json`
 
 Templates used to generate additional question instances.
 
@@ -153,7 +154,7 @@ code_generation/
 Macros/placeholders are automatically instantiated by:
 
 ```text
-prompt_generator/code_runner.py
+code_generation/prompt_generator/code_runner.py
 ```
 
 ## Macro Definitions
@@ -173,7 +174,12 @@ prompt_generator/code_runner.py
 
 # Prompt Generator
 
-## 🚀 `prompt_generator/main.py`
+Directory:
+
+```text
+code_generation/prompt_generator/
+```
+## 🚀 `main.py`
 
 Generates prompts for few-shot learning.
 
@@ -181,13 +187,15 @@ Using the provided inputs, this script automatically generates prompts for few-s
 
 Additionally, it generates evaluation questions in two formats:
 
-Prompt-ready format — intended to be queried to ChatGPT after prompting in order to obtain XoX-generated code snippets.
+- Prompt-ready format — intended to be queried to ChatGPT after prompting in order to obtain XoX-generated code snippets.
 
-Parameterized format — contains macros/placeholders that are later instantiated with concrete values and executed using the optimized code skeletons.
+- Parameterized format — contains macros/placeholders that are later instantiated with concrete values and executed using the optimized code skeletons.
 
-Generated evaluation questions are stored in:
+Generated evaluation questions are stored under:
 
+```text
 question_generator/eval_questions/
+```
 
 These generated artifacts are used throughout the evaluation pipeline for benchmarking and correctness analysis.
 
@@ -202,14 +210,18 @@ Copy the generated prompt into ChatGPT-4o and issue a query such as:
 
 > Rank the IPv6 vantage points based on the number of updates they collected on November 30, 2025.
 
-Expected behavior: generation of a valid code snippet.
+Expected behavior: generation of a syntactically valid code snippet.
 
-## `prompt_generator/code_runner.py`
+## `code_runner.py`
 
 Executes generated code from:
 
 * `optimized_codes`
 * `xox_codes`
+
+## `prompt.txt`
+
+Prompt-engineering instructions (~25000 tokens).
 
 ---
 
@@ -220,11 +232,6 @@ Directory:
 ```text
 bgpstream/
 ```
-
-### `prompt.txt`
-
-Prompt-engineering instructions (~25000 tokens).
-
 ### `codes/`
 
 39 BGPStream implementations generated after prompt engineering.
