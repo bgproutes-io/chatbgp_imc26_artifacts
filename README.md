@@ -177,12 +177,22 @@ prompt_generator/code_runner.py
 
 Generates prompts for few-shot learning.
 
-### Usage
+Using the provided inputs, this script automatically generates prompts for few-shot learning.
 
-```bash
+Additionally, it generates evaluation questions in two formats:
+
+Prompt-ready format — intended to be queried to ChatGPT after prompting in order to obtain XoX-generated code snippets.
+Parameterized format — contains macros/placeholders that are later instantiated with concrete values and executed using the optimized code skeletons.
+
+Generated evaluation questions are stored in:
+
+question_generator/eval_questions/
+
+These generated artifacts are used throughout the evaluation pipeline for benchmarking and correctness analysis.
+
+Usage
 pip install -r requirements.txt
 python3 main.py
-```
 
 Copy the generated prompt into ChatGPT-4o and issue a query such as:
 
