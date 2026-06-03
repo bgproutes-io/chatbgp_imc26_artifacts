@@ -40,7 +40,7 @@ For example:
 corresponds to **Question 2**, whose corresponding code snippet is:
 
 ```text
-question_2.py
+question2.py
 ```
 
 ## ⚠️ Script Executability
