@@ -1,0 +1,52 @@
+Function: get_updates
+
+Definition and Usage:
+Returns BGP update messages (announcements and withdrawals) or the number of updates for each vantage point within a specified time range.
+
+Syntax:
+get_updates(vps, start_date, end_date, return_count, max_updates_to_return, type_filter, prefix_filter, prefix_exact_match, return_aspath, aspath_exact_match, aspath_regexp, return_community, community_regexp, chronological_order, details)
+
+Parameters:
+
+• vps: A single VP or list of VPs.
+• start_date: Start time in ISO format YYYY-MM-DDTHH:MM:SS.
+• end_date: End time in ISO format YYYY-MM-DDTHH:MM:SS.
+• prefix_filter: Prefix condition(s).
+• prefix_exact_match: Exact prefix match. (List of prefixes)
+• aspath_exact_match: Exact AS path match.
+• aspath_regexp: Regex filter for AS path. (Regex filter on AS path. Only entries for which the AS patch match the filter will be returned. Internally uses PostgreSQL pattern matching.)
+• return_community: Include communities (default: True).
+• community_regexp: Regex filter for communities. ((less than 100 characters is allowed))
+• max_updates_to_return: Limit number of updates returned.
+• type_filter: Filter update type ("A" or "W").
+• chronological_order: Return updates in chronological order (default: True).
+• return_count: Return count (True) or full updates (False).
+• details: Include extended details.
+
+Return Values:
+
+• If return_count is False:
+A list of dictionaries. Each dictionary contains:
+
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id → list of updates
+
+Each update is:
+
+[timestamp, type, prefix, as_path, communities]
+
+• If return_count is True:
+A list of dictionaries. Each dictionary contains:
+
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id →
+{
+"A": integer (announcements),
+"W": integer (withdrawals)
+}

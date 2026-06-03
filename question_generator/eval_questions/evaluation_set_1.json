@@ -1,0 +1,301 @@
+{
+  "How many ASes are in the routing system?": {
+    "question": "Can you provide the count of distinct Autonomous Systems (ASes) present in  routing information observed from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 05/20/2026?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "time": "2026-05-20T00:00:00",
+      "ip_protocol": ""
+    }
+  },
+  "What is the average length of an AS path in the routing table?": {
+    "question": "at 12:00:00 AM on May 20th, 2026, what was the average number of ASNs appearing in AS paths observed from collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "time": "2026-05-20T00:00:00"
+    }
+  },
+  "Who are AS x neighbors?": {
+    "question": "What Autonomous Systems appeared immediately before or after AS 16509 in AS paths according to BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on May 20th, 2026?",
+    "parameters": {
+      "asx": "16509",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "time": "2026-05-20T00:00:00"
+    }
+  },
+  "Identify ASes that are always either at the beginning or at the end of the AS path, meaning that never appear in the middle, and that have at least two different neighbors": {
+    "question": "Find the ASes that never appear in the middle of an  AS path and always appear either at the start or end, with at least two unique adjacent ASes according to BGP data from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 throughout May 20th, 2026.",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "time": "2026-05-20T00:00:00",
+      "ip_protocol": ""
+    }
+  },
+  "What is the shortest distance between AS x and AS y in terms of AS hops?": {
+    "question": "What minimum AS-hop count between AS pairs 37100 and 37634 was visible in AS paths observed from vantage points 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asxy": "37100,37634"
+    }
+  },
+  "Are AS x and AS y connected?": {
+    "question": "Did routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 observe AS pairs 1299 and 22439 as adjacent ASes during May 20th, 2026?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "time": "2026-05-20T00:00:00",
+      "asxy": "1299,22439"
+    }
+  },
+  "Which ASes are connected to AS x without being at the beginning or at the end of the AS path?": {
+    "question": "Can you identify the ASes directly adjacent to AS 45474 in  AS paths that never appear at the beginning or end of AS paths based on BGP data from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on May 20th, 2026?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "time": "2026-05-20T00:00:00",
+      "asx": "45474",
+      "ip_protocol": ""
+    }
+  },
+  "How many ASes appear always at an end of the AS path and never in the middle": {
+    "question": "during May 20th, 2026, how many Autonomous Systems exclusively appeared at the beginning or end of  AS paths and never in intermediate positions according to BGP data from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "ip_protocol": ""
+    }
+  },
+  "How many ASes always appear at the middle of the AS paths and never at one end?": {
+    "question": "How many ASes are consistently found only in interior AS-path positions, but never at terminal positions, according to BGP data from collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 5/20/26?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "When did AS x appear in the routing table?": {
+    "question": "During the last month, when did the routing table entries associated with AS 4800 first become visible to BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "4800"
+    }
+  },
+  "Since when AS x and AS y are connected?": {
+    "question": "Can you determine when Autonomous Systems 202561 and 5405 first became connected during the last month according to routing information gathered from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asxy": "202561,5405"
+    }
+  },
+  "Give me time of the last update observed for prefix p for every vantage point": {
+    "question": "Can you tell me the time of the most recent update seen for subnet 117.160.16.0/24 by routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during the last month?",
+    "parameters": {
+      "prefix": "117.160.16.0/24",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "What is the more recent day for which AS x and AS y appear disconnected from all the vantage points?": {
+    "question": "Within the last month, what is the most recent day that AS pairs 13030 and 1321 were observed as disconnected from every  VP in vantage points 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asxy": "13030,1321",
+      "ip_protocol": ""
+    }
+  },
+  "Did the last AS in AS paths for prefix p change?": {
+    "question": "From observations made by VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, was the terminating AS (origin AS) in AS paths for network 5.8.189.0/24 altered during the period from May 20th, 2026 to May 20th, 2026?",
+    "parameters": {
+      "prefix": "5.8.189.0/24",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59"
+    }
+  },
+  "Was there a burst of withdrawals i.e., 2 times more withdrawals than the average on other time periods with the same duration?": {
+    "question": "Did the total withdrawal volume aggregated across all collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during during the period from May 20th, 2026 to May 20th, 2026 reach at least twice the historical average computed over equivalent intervals in the previous 10 days?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "Rank the vantage points based on the number of updates they collected.": {
+    "question": "What is the ranking of the vantage points in VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 based on the total updates they recorded during during the period from May 20th, 2026 to May 20th, 2026?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "Give me the number of announcements that were collected for every hour.": {
+    "question": "during the period from May 20th, 2026 to May 20th, 2026, how many announcement messages were collected in each hour from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "Which updates announce a blackholing communities?": {
+    "question": "According to routing data collected from VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, which updates announced blackholing communities over the interval between May 20th, 2026 and May 20th, 2026?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "Which updates hold community c?": {
+    "question": "Can you identify the updates from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 between May 20th, 2026 and May 20th, 2026 that hold communities 53062:11:8373?",
+    "parameters": {
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "community_set": "53062:11:8373",
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59"
+    }
+  },
+  "Which are the AS paths where AS x appears?": {
+    "question": "What AS paths collected from VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 from 5/20/26 to 5/20/26 include Autonomous System 268704?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "268704"
+    }
+  },
+  "Which updates use large communities?": {
+    "question": "Can you identify the BGP updates with large community attributes as seen by VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 from 5/20/26 to 5/20/26?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "How many prefixes can we see?": {
+    "question": "at 12:00:00 AM on May 20th, 2026, how many routing prefixes could be seen from VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "What are the routing changes for prefix p?": {
+    "question": "Which  routing events for subnet 187.214.252.0/24 were detected by BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 from 5/20/26 to 5/20/26?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "prefix": "187.214.252.0/24",
+      "ip_protocol": ""
+    }
+  },
+  "Does AS x appear in an AS path used to reach prefix p?": {
+    "question": "According to routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, does network 31.42.129.0/24 use an AS path containing AS 3356 throughout May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "prefix": "31.42.129.0/24",
+      "asx": "3356"
+    }
+  },
+  "Can we see prefix p?": {
+    "question": "during May 20th, 2026, was 2407:9a00:1::/48 advertised and visible from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "prefix": "2407:9a00:1::/48"
+    }
+  },
+  "Which ASes originate prefix p?": {
+    "question": "What ASes were the originators of IP prefix 37.148.32.0/21 as seen by BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "prefix": "37.148.32.0/21"
+    }
+  },
+  "How many bogon prefixes are announced by AS x?": {
+    "question": "at 12:00:00 AM on May 20th, 2026, how many bogon prefixes (i.e., prefixes that should never be routed over the public Internet) were being announced by AS41953 from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "41953"
+    }
+  },
+  "What are the paths where AS x is at the origin, ie the last AS?": {
+    "question": "According to VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, what AS paths showed AS30838 as the originating AS during the period from May 20th, 2026 to May 20th, 2026?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "30838"
+    }
+  },
+  "Among the ASes that announce an IPv4 prefix, what is the proportion that also announce an IPv6 prefix?": {
+    "question": "Based on routing data from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 5/20/26, what percentage of ASes announcing IPv4 prefixes also announced IPv6 prefixes?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "How many 24 AS x is announcing?": {
+    "question": "What was the quantity of /24 prefixes visible from AS56047 as observed by vantage points 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 at 12:00:00 AM on May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "56047"
+    }
+  },
+  "What is the size of the RIB of peer p?": {
+    "question": "What is the routing information base size for VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "How many distinct communitie values are related to AS x, i.e how many community values starts with x?": {
+    "question": "According to routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, how many unique community values beginning with 0 existed on 05/20/2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "0"
+    }
+  },
+  "Which AS is using AS path prepending, i.e. same AS prepended?": {
+    "question": "According to VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, which ASes implemented AS path prepending on May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "Which proportion of the route pass through AS x?": {
+    "question": "How much of the routing data traversed AS 39386 as seen from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 05/20/2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "39386"
+    }
+  },
+  "How often the AS path from AS x to AS y matches the inverted AS path between AS y to AS x?": {
+    "question": "How frequently does the AS path from AS pairs 36782 and 6939 match the reversed AS path according to VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 05/20/2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asxy": "36782,6939"
+    }
+  },
+  "What is the visibility growth in terms number of distinct AS links observed for every VP?": {
+    "question": "What increase in AS link visibility did VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 experience between May 20th, 2026 and May 20th, 2026?",
+    "parameters": {
+      "time_interval": "2026-05-20T00:00:00 - 2026-05-20T23:59:59",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "Which prefixes are owned-originated by AS x?": {
+    "question": "Can you provide the list of prefixes announced by AS65112 from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "asx": "65112"
+    }
+  },
+  "What is the percentage of single hop AS paths?": {
+    "question": "What percentage of AS paths with exactly one hop was recorded by collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 throughout May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254"
+    }
+  },
+  "What are the community values for prefix p?": {
+    "question": "According to VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, what community tags were present for prefix network 2a02:ac80:b000::/48 at 12:00:00 AM on May 20th, 2026?",
+    "parameters": {
+      "time": "2026-05-20T00:00:00",
+      "vp": "2001:43f8:6d0::2934,206.126.110.5,80.81.194.45,208.115.136.119,2001:7f8::8463:0:1,80.81.192.79,203.159.68.69,203.181.248.195,2001:13c7:7020:300::254",
+      "prefix": "2a02:ac80:b000::/48"
+    }
+  }
+}

@@ -1,0 +1,912 @@
+{
+    "How many ASes are in the routing system?": [
+    {
+        "parameters": ["vp", "time"],
+        "templates": [
+            "What is the number of unique ASes visible in the routing system as seen from {vp} {time}?",
+            "From {vp} {time}, how many distinct ASes were present in the routing system?",
+            "{time}, what was the total count of unique ASes observed in routing data from {vp}?",
+            "Count the number of distinct ASes appearing in the routing system {time}, as seen from {vp}.",
+            "How many unique ASes were visible in routing tables from {vp} {time}?",
+            "{time}, what was the routing-system AS count observed by {vp}?",
+            "According to routing data from {vp}, how many distinct ASes existed in the routing system {time}?",
+            "What total AS count was reported by {vp} {time}?",
+            "How many unique autonomous systems were detected in routing data from {vp} {time}?"
+        ]
+    },
+
+    {
+        "parameters": ["vp", "time", "ip_protocol"],
+        "templates": [
+            "What is the total number of unique Autonomous Systems (ASes) visible in {ip_protocol} routing data from {vp} {time}?",
+            "Can you provide the count of distinct Autonomous Systems (ASes) present in {ip_protocol} routing information observed from {vp} {time}?",
+            "What is the total count of unique Autonomous Systems (ASes) visible in {ip_protocol} routing data received from {vp} {time}?",
+            "{time}, how many distinct Autonomous Systems (ASes) were visible in {ip_protocol} routing data from {vp}?",
+            "How many unique ASes supporting {ip_protocol} were visible from {vp} {time}?",
+            "What was the {ip_protocol} AS count observed from {vp} {time}?",
+            "According to {ip_protocol} routing data from {vp}, how many distinct ASes existed in the routing system {time}?",
+            "{time}, how many unique Autonomous Systems using {ip_protocol} were observed from {vp}?",
+            "{time}, what was the total number of distinct {ip_protocol} Autonomous Systems observed by {vp}?"
+        ]
+    }
+],
+    
+   "What is the average length of an AS path in the routing table?": [
+
+    {
+        "parameters": ["vp", "time"],
+
+        "templates": [
+            "What is the average number of ASNs contained in an AS path observed by {vp} {time}?",
+            "Can you provide the average AS path length measured as the number of ASNs in each AS path seen by {vp} {time}?",
+            "What was the average count of ASNs per AS path in routing data from {vp} {time}?",
+            "Could you share the mean AS path size, measured in ASNs, observed by {vp} {time}?",
+            "{time}, what was the average number of ASNs appearing in AS paths observed from {vp}?",
+            "What was the mean AS path length in terms of ASN count seen by {vp} {time}?",
+            "{time}, what average AS path length, measured by the number of ASNs in the AS path, was reported by {vp}?"
+        ]
+    },
+
+    {
+        "parameters": ["vp", "time", "ip_protocol"],
+
+        "templates": [
+            "What is the average number of ASNs contained in an {ip_protocol} AS path observed by {vp} {time}?",
+            "Can you provide the average {ip_protocol} AS path length measured as the number of ASNs in each AS path seen by {vp} {time}?",
+            "What was the average count of ASNs per {ip_protocol} AS path in routing data from {vp} {time}?",
+            "Could you share the mean {ip_protocol} AS path size, measured in ASNs, observed by {vp} {time}?",
+            "{time}, what was the average number of ASNs appearing in {ip_protocol} AS paths observed from {vp}?",
+            "What was the mean {ip_protocol} AS path length in terms of ASN count seen by {vp} {time}?",
+            "{time}, what average {ip_protocol} AS path length, measured by the number of ASNs in the AS path, was reported by {vp}?"
+        ]
+    }
+
+],
+
+   "Who are AS x neighbors?": [
+
+    {
+        "parameters": ["asx", "vp", "time"],
+
+        "templates": [
+            "Which Autonomous Systems were directly adjacent to Autonomous System {asx} in AS paths observed by {vp} {time}?",
+            "Can you provide a list of ASes directly connected to Autonomous System {asx} in observed AS paths from {vp} {time}?",
+            "What Autonomous Systems appeared immediately before or after AS {asx} in AS paths according to {vp} {time}?",
+            "Identify the neighboring ASes directly adjacent to Autonomous System {asx} in routing data seen from {vp} {time}.",
+            "{time}, which ASes appeared directly adjacent to AS {asx} according to {vp}?",
+            "{time}, who were the ASNs directly neighboring AS {asx} as observed by {vp}?",
+            "What AS neighbors appeared immediately connected to AS {asx} in AS paths from {vp} {time}?",
+            "Which ASes were directly connected to AS {asx} within observed AS paths according to {vp} {time}?",
+            "According to routing data collected from {vp} {time}, which ASes appeared adjacent to AS {asx} in AS paths?"
+        ]
+    },
+
+    {
+        "parameters": ["asx", "vp", "time", "ip_protocol"],
+
+        "templates": [
+            "{time}, which Autonomous Systems were directly adjacent to AS {asx} in {ip_protocol} AS paths observed by {vp}?",
+            "Can you provide the ASes directly connected to Autonomous System {asx} in {ip_protocol} routing data from {vp} {time}?",
+            "What ASNs appeared immediately before or after AS {asx} in {ip_protocol} AS paths observed from {vp} {time}?",
+            "{time}, who were the AS neighbors directly adjacent to Autonomous System {asx} in {ip_protocol} according to {vp}?",
+            "Identify the Autonomous Systems directly neighboring AS {asx} in {ip_protocol} AS paths seen from {vp} {time}.",
+            "Which ASes were directly connected to AS {asx} within {ip_protocol} AS paths according to {vp} {time}?",
+            "{time}, what Autonomous Systems appeared immediately adjacent to AS {asx} in {ip_protocol} routing data observed by {vp}?",
+            "According to {ip_protocol} routing information collected from {vp} {time}, which ASes appeared adjacent to AS {asx} in AS paths?"
+        ]
+    }
+
+],
+    "Identify ASes that are always either at the beginning or at the end of the AS path, meaning that never appear in the middle, and that have at least two different neighbors": [
+
+    {
+        "parameters": ["vp", "time"],
+
+        "templates": [
+            "Can you list the ASes that always appear at the start or end of AS paths, never in the middle, and have at least two distinct adjacent ASes as observed from {vp} {time}?",
+            "Which ASes only appear at either the start or end of AS paths, never in between, and have at least two different adjacent ASes according to BGP data from {vp} {time}?",
+            "Identify Autonomous Systems that exclusively occupy the beginning or end positions in AS paths, never intermediate positions, and possess at least two distinct adjacent ASes based on observations from {vp} {time}.",
+            "Which ASes are seen only at the start or end of AS paths and never in the middle, while having at least two different adjacent ASes as tracked by {vp} {time}?",
+            "Determine the ASes that exclusively appear at the start or end of AS paths, never in the middle, and have at least two distinct adjacent ASes according to BGP data from {vp} {time}.",
+            "Which ASes are always found either at the beginning or end of AS paths, never in intermediate positions, and have at least two different adjacent ASes based on BGP information from {vp} {time}?",
+            "Identify the ASes that exclusively appear at the start or end points of AS paths, never in the middle, and possess at least two unique adjacent ASes as observed in BGP data from {vp} {time}.",
+            "From {vp} {time}, list the ASes that only appear at the beginning or end of AS paths, never in the middle, and have at least two different adjacent ASes.",
+            "{time}, which ASes observed from {vp} appeared only at the edges of AS paths and maintained at least two distinct adjacent ASes?",
+            "According to routing data gathered from {vp} {time}, which ASes never appeared in the middle of AS paths and had at least two adjacent ASes?"
+        ]
+    },
+
+    {
+        "parameters": ["vp", "time", "ip_protocol"],
+
+        "templates": [
+            "Which Autonomous Systems exclusively appear at the start or end of {ip_protocol} AS paths and have at least two distinct adjacent ASes as observed from {vp} {time}?",
+            "Find the ASes that never appear in the middle of an {ip_protocol} AS path and always appear either at the start or end, with at least two unique adjacent ASes according to BGP data from {vp} {time}.",
+            "Determine the ASes that are always located at the beginning or end of {ip_protocol} AS paths, never in between, and have at least two different adjacent ASes observed from {vp} {time}.",
+            "Which ASes consistently appear only at the ends of {ip_protocol} AS paths and maintain at least two distinct adjacent ASes, never appearing in the middle, according to routing data from {vp} {time}?",
+            "Determine which ASes are exclusively found at the start or end of {ip_protocol} AS paths, never in the middle, and have at least two distinct adjacent ASes according to BGP data from {vp} {time}.",
+            "Find the ASes that are always at the beginning or end of {ip_protocol} AS paths, never in the center, and have at least two different adjacent ASes observed by {vp} {time}.",
+            "Can you pinpoint which ASes appear only at the start or end of {ip_protocol} AS paths, never in the middle, and have at least two distinct adjacent ASes as seen by {vp} {time}?",
+            "Identify which ASes uniquely occur at either the beginning or end of {ip_protocol} AS paths and never in between, with at least two different adjacent ASes observed by {vp} {time}.",
+            "{time}, which ASes observed from {vp} were restricted to the edges of {ip_protocol} AS paths and had at least two adjacent ASes?",
+            "According to routing information gathered from {vp} {time}, which ASes never appeared in the middle of {ip_protocol} AS paths and maintained at least two adjacent ASes?"
+        ]
+    }
+
+],
+    "What is the shortest distance between AS x and AS y in terms of AS hops?": [
+
+  {
+    "parameters": ["time", "vp", "asxy"],
+    "templates": [
+      "What is the minimum number of AS hops separating {asxy} in AS paths observed from {vp} {time}?",
+      "{time}, what was the smallest AS-hop distance between {asxy} according to routing data from {vp}?",
+      "How many AS hops were there in the shortest AS-path segment between {asxy} observed by {vp} {time}?",
+      "Can you determine the shortest AS-hop distance between {asxy} using BGP routing data from {vp} {time}?",
+      "According to routing observations from {vp}, what was the minimal number of AS hops between {asxy} {time}?",
+      "What was the shortest AS-level routing distance, measured in AS hops, between {asxy} seen by {vp} {time}?",
+      "{time}, how many AS hops separated {asxy} in the shortest observed AS path from {vp}?",
+      "What minimum AS-hop count between {asxy} was visible in AS paths observed from {vp} {time}?",
+      "Using BGP AS-path data from {vp} {time}, what was the shortest AS-hop distance between {asxy}?"
+    ]
+  },
+
+  {
+    "parameters": ["time", "vp", "asxy", "ip_protocol"],
+    "templates": [
+      "What is the minimum number of AS hops separating {asxy} in {ip_protocol} AS paths observed from {vp} {time}?",
+      "{time}, what was the smallest {ip_protocol} AS-hop distance between {asxy} according to routing data from {vp}?",
+      "How many {ip_protocol} AS hops were there in the shortest AS-path segment between {asxy} observed by {vp} {time}?",
+      "Can you determine the shortest {ip_protocol} AS-hop distance between {asxy} using BGP routing data from {vp} {time}?",
+      "According to routing observations from {vp}, what was the minimal {ip_protocol} AS-hop distance between {asxy} {time}?",
+      "What was the shortest {ip_protocol} AS-level routing distance, measured in AS hops, between {asxy} seen by {vp} {time}?",
+      "{time}, how many {ip_protocol} AS hops separated {asxy} in the shortest observed AS path from {vp}?",
+      "What minimum {ip_protocol} AS-hop count between {asxy} was visible in AS paths observed from {vp} {time}?",
+      "Using {ip_protocol} BGP AS-path data from {vp} {time}, what was the shortest AS-hop distance between {asxy}?"
+    ]
+  }
+
+],
+      "Are AS x and AS y connected?": [
+
+    {
+      "parameters": ["vp", "time", "asxy"],
+
+      "templates": [
+        "Are {asxy} directly connected according to BGP data from {vp} {time}?",
+        "Did {vp} observe {asxy} as adjacent ASes {time}?",
+        "According to routing data from {vp} {time}, were {asxy} directly adjacent in AS paths?",
+        "{time}, were {asxy} connected according to observations from {vp}?",
+        "Were {asxy} neighboring ASes in observed AS paths from {vp} {time}?"
+      ]
+    },
+
+    {
+      "parameters": ["vp", "time", "asxy", "ip_protocol"],
+
+      "templates": [
+        "Were {asxy} directly connected in {ip_protocol} routing data observed from {vp} {time}?",
+        "Did {ip_protocol} BGP observations from {vp} show {asxy} as adjacent ASes {time}?"
+      ]
+    }
+
+  ],
+    "Which ASes are connected to AS x without being at the beginning or at the end of the AS path?": [
+
+    {
+      "parameters": ["vp", "time", "asx"],
+
+      "templates": [
+        "Can you identify the ASes directly adjacent to AS {asx} that never appear at the beginning or end of AS paths in BGP data from {vp} {time}?",
+        "Which ASes appeared directly connected to AS {asx} while themselves appearing only in intermediate AS-path positions according to BGP observations from {vp} {time}?",
+        "{time}, which ASes directly adjacent to AS {asx} were never observed at the start or end of AS paths from {vp}?",
+        "Can you list the ASes directly neighboring AS {asx} that appeared only in the middle of AS paths based on routing data from {vp} {time}?",
+        "According to BGP routing information from {vp} {time}, which ASes appeared immediately before or after AS {asx} while never occupying AS-path endpoint positions?",
+        "From {vp} {time}, which ASes adjacent to AS {asx} were observed only in intermediate AS-path positions?",
+        "Identify the ASNs directly connected to AS {asx} that were never the first or last ASN in AS paths based on data from {vp} {time}.",
+        "What ASes were directly adjacent to AS {asx} while themselves appearing only in intermediate AS-path positions according to {vp} {time}?",
+        "{time}, which ASes linked to AS {asx} were excluded from AS-path start and end positions in BGP data from {vp}?",
+        "Can routing data from {vp} {time} reveal which ASes appeared directly adjacent to AS {asx} only in the middle of AS paths?"
+      ]
+    },
+
+    {
+      "parameters": ["vp", "time", "asx", "ip_protocol"],
+
+      "templates": [
+        "Can you identify the ASes directly adjacent to AS {asx} in {ip_protocol} AS paths that never appear at the beginning or end of AS paths based on BGP data from {vp} {time}?",
+        "Which ASes appeared directly connected to AS {asx} while themselves appearing only in intermediate positions of {ip_protocol} AS paths according to BGP observations from {vp} {time}?",
+        "{time}, which {ip_protocol} ASes directly adjacent to AS {asx} were never observed at the start or end of AS paths from {vp}?",
+        "Can you list the {ip_protocol} ASes directly neighboring AS {asx} that appeared only in the middle of AS paths based on routing data from {vp} {time}?",
+        "According to {ip_protocol} BGP routing information from {vp} {time}, which ASes appeared immediately before or after AS {asx} while never occupying AS-path endpoint positions?",
+        "From {vp} {time}, which {ip_protocol} ASes adjacent to AS {asx} were observed only in intermediate AS-path positions?",
+        "Identify the {ip_protocol} ASNs directly connected to AS {asx} that were never the first or last ASN in AS paths based on data from {vp} {time}.",
+        "What {ip_protocol} ASes were directly adjacent to AS {asx} while themselves appearing only in intermediate AS-path positions according to {vp} {time}?",
+        "{time}, which ASes linked to AS {asx} were excluded from the start and end positions of {ip_protocol} AS paths from {vp}?",
+        "Can {ip_protocol} routing data from {vp} {time} reveal which ASes appeared directly adjacent to AS {asx} only in the middle of AS paths?"
+      ]
+    }
+
+],
+   "How many ASes appear always at an end of the AS path and never in the middle": [
+
+    {
+      "parameters": ["time", "vp"],
+      "templates": [
+        "{time}, how many Autonomous Systems always appeared at the beginning or end of AS paths and never in intermediate positions according to BGP data from {vp}?",
+        "Using routing data from {vp} {time}, how many ASes appeared exclusively at the start or end of AS paths and never in the middle?",
+        "Can you determine the number of ASes that only occurred at the edges of AS paths and never in intermediate AS-path positions based on observations from {vp} {time}?",
+        "According to {vp} {time}, how many ASes were exclusively observed at AS-path endpoints and never as intermediate ASes?",
+        "{time}, what was the count of Autonomous Systems that never appeared in the middle of AS paths as seen from {vp}?",
+        "How many ASes were consistently found only at the start or end of AS paths, but never in intermediate positions, according to BGP data from {vp} {time}?",
+        "From {vp} {time}, how many ASes appeared solely at terminal AS-path positions and never in the middle?",
+        "What number of ASes were restricted to AS-path endpoints and never appeared as intermediate transit ASes in routing data from {vp} {time}?",
+        "Based on BGP observations from {vp} collected {time}, how many ASes always appeared at one end of the AS path and never in intermediate positions?",
+        "How many Autonomous Systems exclusively occupied endpoint positions in AS paths and never intermediate positions according to BGP snapshots from {vp} {time}?"
+      ]
+    },
+
+    {
+      "parameters": ["time", "vp", "ip_protocol"],
+      "templates": [
+        "{time}, how many Autonomous Systems exclusively appeared at the beginning or end of {ip_protocol} AS paths and never in intermediate positions according to BGP data from {vp}?",
+        "Using {ip_protocol} routing information from {vp} {time}, how many ASes only appeared at the start or end of AS paths and never in the middle?",
+        "Can you determine the number of ASes that never appeared as intermediate ASes in {ip_protocol} AS paths based on data from {vp} {time}?",
+        "According to {ip_protocol} BGP observations from {vp} {time}, how many ASes always occupied AS-path endpoints and never intermediate positions?",
+        "{time}, what was the count of ASes that never appeared in the middle of {ip_protocol} AS paths as seen from {vp}?",
+        "How many ASes were consistently found only at terminal positions in {ip_protocol} AS paths according to BGP data from {vp} {time}?",
+        "From {vp} {time}, how many Autonomous Systems exclusively occupied endpoint positions in {ip_protocol} AS paths?",
+        "What number of ASes were restricted to endpoint positions in {ip_protocol} AS paths and never appeared as intermediate transit ASes based on data from {vp} {time}?",
+        "Based on {ip_protocol} routing snapshots from {vp} collected {time}, how many ASes always appeared at the edges of AS paths and never in the middle?",
+        "How many Autonomous Systems exclusively occupied endpoint positions and never intermediate positions in {ip_protocol} AS paths according to BGP data from {vp} {time}?"
+      ]
+    }
+
+],
+
+  "How many ASes always appear at the middle of the AS paths and never at one end?": [
+  {
+    "parameters": ["time", "vp"],
+    "templates": [
+      "{time}, how many Autonomous Systems are consistently found only in the middle of AS paths and never at the beginning or end according to BGP data from {vp}?",
+      "Using routing data collected from {vp} {time}, how many ASes appear exclusively in intermediate AS-path positions and never at either endpoint?",
+      "Can you determine the number of ASes that only occur in the middle of AS paths and are never observed at the start or end based on observations from {vp} {time}?",
+      "According to {vp} {time}, how many ASes are exclusively observed as transit ASes and never as AS-path endpoints?",
+      "{time}, what is the count of Autonomous Systems that never appear at the beginning or end of AS paths as seen from {vp}?",
+      "How many ASes are consistently found only in interior AS-path positions, but never at terminal positions, according to BGP data from {vp} {time}?",
+      "From {vp} {time}, how many ASes appear solely in intermediate AS-path positions?",
+      "What number of ASes are restricted to intermediate positions in AS paths and never appear as endpoint ASes in routing data from {vp} {time}?",
+      "Based on BGP observations from {vp} collected {time}, how many ASes are always located in the middle of AS paths?",
+      "How many Autonomous Systems are exclusively intermediate ASes and never endpoint ASes according to the BGP snapshots from {vp} {time}?"
+    ]
+  },
+
+  {
+    "parameters": ["time", "vp", "ip_protocol"],
+    "templates": [
+      "{time}, how many Autonomous Systems are exclusively found in the middle of {ip_protocol} AS paths and never at the beginning or end according to BGP data from {vp}?",
+      "Using {ip_protocol} routing information from {vp} {time}, how many ASes appear only in intermediate positions of AS paths?",
+      "Can you determine the number of ASes that are never endpoint ASes in {ip_protocol} AS paths based on data from {vp} {time}?",
+      "According to {ip_protocol} BGP observations from {vp} {time}, how many ASes are always located in the middle of AS paths?",
+      "{time}, what is the count of ASes that never appear at the beginning or end of {ip_protocol} AS paths as seen from {vp}?",
+      "How many ASes are consistently found only in interior positions of {ip_protocol} AS paths according to BGP data from {vp} {time}?",
+      "From {vp} {time}, how many Autonomous Systems exclusively occupy intermediate AS-path positions in {ip_protocol} routing?",
+      "What number of ASes are restricted to middle positions in {ip_protocol} AS paths and never appear as endpoint ASes based on data from {vp} {time}?",
+      "Based on {ip_protocol} routing snapshots from {vp} collected {time}, how many ASes always appear in the middle of AS paths?",
+      "How many Autonomous Systems are exclusively transit ASes and never endpoint ASes in {ip_protocol} according to BGP data from {vp} {time}?"
+    ]
+  }
+],
+"When did AS x appear in the routing table?": [
+  {
+    "parameters": ["vp", "asx"],
+    "templates": [
+      "During the last month, at what time did AS{asx} first appear in the routing tables observed from {vp}?",
+      "Within the last month, when was ASN {asx} first detected in the routing information collected from {vp}?",
+      "What was the earliest timestamp during the last month when AS {asx} appeared in routing data retrieved from {vp}?",
+      "Using routing table data from {vp}, when did AS{asx} first become visible during the last month?",
+      "During the last month, at what moment did AS number {asx} first show up in the routing tables monitored by {vp}?",
+      "Can you determine when AS {asx} first appeared in the BGP routing information seen from {vp} during the last month?",
+      "According to routing snapshots gathered from {vp} during the last month, when was AS {asx} first observed?",
+      "What is the earliest timestamp during the last month at which AS{asx} appeared in routing table data from {vp}?",
+      "During the last month, when did the routing table entries associated with AS {asx} first become visible to {vp}?",
+      "Based on BGP observations from {vp} during the last month, when did AS{asx} first enter the routing table?"
+    ]
+  },
+
+  {
+    "parameters": ["vp", "asx", "ip_protocol"],
+    "templates": [
+      "During the last month, at what time did AS#{asx} first appear in the {ip_protocol} routing tables observed from {vp}?",
+      "Within the last month, when was ASN {asx} first detected in {ip_protocol} routing information collected from {vp}?",
+      "What was the earliest timestamp during the last month when AS {asx} appeared in {ip_protocol} routing data retrieved from {vp}?",
+      "Using {ip_protocol} routing table data from {vp}, when did AS{asx} first become visible during the last month?",
+      "During the last month, at what moment did AS number {asx} first show up in the {ip_protocol} routing tables monitored by {vp}?",
+      "Can you determine when AS {asx} first appeared in the {ip_protocol} BGP routing information seen from {vp} during the last month?",
+      "According to {ip_protocol} routing snapshots gathered from {vp} during the last month, when was AS {asx} first observed?",
+      "What is the earliest timestamp during the last month at which AS{asx} appeared in {ip_protocol} routing table data from {vp}?",
+      "During the last month, when did the {ip_protocol} routing table entries associated with AS {asx} first become visible to {vp}?",
+      "Based on {ip_protocol} BGP observations from {vp} during the last month, when did AS{asx} first enter the routing table?"
+    ]
+  }
+],
+"Since when AS x and AS y are connected?": [
+  {
+    "parameters": ["vp", "asxy"],
+    "templates": [
+      "During the last month, since when have {asxy} been connected according to BGP observations from {vp}?",
+      "Within the last month, when was the connection between {asxy} first observed in routing data collected from {vp}?",
+      "During the last month, how long have the {asxy} been interconnected based on BGP data from {vp}?",
+      "Within the last month, at what point did {asxy} establish connectivity as seen from {vp}?",
+      "During the last month, from what date has the connection between {asxy} been visible to {vp}?",
+      "Can you determine when {asxy} first became connected during the last month according to routing information gathered from {vp}?",
+      "What is the earliest observed timestamp during the last month of a connection between {asxy} in BGP data from {vp}?",
+      "According to routing snapshots collected from {vp} during the last month, when did {asxy} first appear connected?",
+      "During the last month, when did the link between {asxy} begin appearing in routing information observed from {vp}?",
+      "Based on BGP observations from {vp} during the last month, when was the connection between {asxy} established?"
+    ]
+  },
+
+  {
+    "parameters": ["vp", "asxy", "ip_protocol"],
+    "templates": [
+      "During the last month, since when have {asxy} been connected in {ip_protocol} according to BGP observations from {vp}?",
+      "Within the last month, when was the {ip_protocol} connection between {asxy} first observed in routing data collected from {vp}?",
+      "During the last month, how long have the {asxy} been interconnected over {ip_protocol} based on BGP data from {vp}?",
+      "Within the last month, at what point did {asxy} establish {ip_protocol} connectivity as seen from {vp}?",
+      "During the last month, from what date has the {ip_protocol} connection between {asxy} been visible to {vp}?",
+      "Can you determine when {asxy} first became connected in {ip_protocol} during the last month according to routing information gathered from {vp}?",
+      "What is the earliest observed timestamp during the last month of an {ip_protocol} connection between {asxy} in BGP data from {vp}?",
+      "According to {ip_protocol} routing snapshots collected from {vp} during the last month, when did {asxy} first appear connected?",
+      "During the last month, when did the {ip_protocol} link between {asxy} begin appearing in routing information observed from {vp}?",
+      "Based on {ip_protocol} BGP observations from {vp} during the last month, when was the connection between {asxy} established?"
+    ]
+  }
+],
+"Give me time of the last update observed for prefix p for every vantage point": [
+  {
+    "parameters": ["prefix", "vp"],
+    "templates": [
+      "During the last month, what are the most recent update times observed for {prefix} from {vp}?",
+      "Can you provide the timestamp of the latest update seen for {prefix} during the last month according to {vp}?",
+      "For {prefix}, what are the last observed update times from {vp} during the last month?",
+      "Using observations from {vp}, when was the most recent update recorded for {prefix} during the last month?",
+      "What is the latest update timestamp for {prefix} as observed by {vp} during the last month?",
+      "Could you list the most recent update times detected for {prefix} from {vp} during the last month?",
+      "According to {vp}, when was the last update observed for {prefix} during the last month?",
+      "From the perspective of {vp}, what are the latest update times associated with {prefix} during the last month?",
+      "Can you tell me the time of the most recent update seen for {prefix} by {vp} during the last month?",
+      "What timestamps correspond to the latest updates observed for {prefix} from {vp} during the last month?"
+    ]
+  },
+
+  {
+    "parameters": ["prefix", "vp", "ip_protocol"],
+    "templates": [
+      "During the last month, what are the most recent update times observed for {ip_protocol} {prefix} from {vp}?",
+      "Can you provide the timestamp of the latest {ip_protocol} update seen for {prefix} during the last month according to {vp}?",
+      "For {ip_protocol} {prefix}, what are the last observed update times from {vp} during the last month?",
+      "Using {ip_protocol} observations from {vp}, when was the most recent update recorded for {prefix} during the last month?",
+      "What is the latest {ip_protocol} update timestamp for {prefix} as observed by {vp} during the last month?",
+      "Could you list the most recent {ip_protocol} update times detected for {prefix} from {vp} during the last month?",
+      "According to {ip_protocol} {vp}, when was the last update observed for {prefix} during the last month?",
+      "From the perspective of {vp}, what are the latest {ip_protocol} update times associated with {prefix} during the last month?",
+      "Can you tell me the time of the most recent {ip_protocol} update seen for {prefix} by {vp} during the last month?",
+      "What timestamps correspond to the latest {ip_protocol} updates observed for {prefix} from {vp} during the last month?"
+    ]
+  }
+],
+"What is the more recent day for which AS x and AS y appear disconnected from all the vantage points?": [
+  {
+    "parameters": ["vp", "asxy"],
+    "templates": [
+      "Within the last month, at which day did {asxy} most recently appear disconnected across all {vp}?",
+      "Within the last month, what is the most recent day that {asxy} were observed as disconnected from {vp}?",
+      "During the last month, when were {asxy} last seen without a connection according to all {vp}?",
+      "According to observations from {vp} during the last month, what is the latest day on which {asxy} appeared disconnected?",
+      "Within the last month, what is the most recent date where {asxy} were not connected as observed by all {vp}?",
+      "From the perspective of {vp}, when during the last month did {asxy} last appear disconnected?",
+      "Can you identify the latest day within the last month that {asxy} showed no connectivity across all {vp}?",
+      "Within the last month, what was the last observed day where {asxy} were disconnected for every vantage point in {vp}?",
+      "Using routing observations from {vp} during the last month, when did {asxy} most recently appear disconnected?",
+      "Within the last month, on what day were {asxy} last observed as disconnected by all {vp}?"
+    ]
+  },
+
+  {
+    "parameters": ["vp", "asxy", "ip_protocol"],
+    "templates": [
+      "Within the last month, at which day did {asxy} most recently appear disconnected across all {ip_protocol} {vp}?",
+      "Within the last month, what is the most recent day that {asxy} were observed as disconnected from every {ip_protocol} VP in {vp}?",
+      "During the last month, when were {asxy} last seen without a connection according to all {ip_protocol} {vp}?",
+      "According to {ip_protocol} observations from {vp} during the last month, what is the latest day on which {asxy} appeared disconnected?",
+      "Within the last month, what is the most recent date where {asxy} were not connected as observed by all {ip_protocol} {vp}?",
+      "From the perspective of {ip_protocol} {vp}, when during the last month did {asxy} last appear disconnected?",
+      "Can you identify the latest day within the last month that {asxy} showed no {ip_protocol} connectivity across all {vp}?",
+      "Within the last month, what was the last observed day where {asxy} were disconnected for every {ip_protocol} vantage point in {vp}?",
+      "Using {ip_protocol} routing observations from {vp} during the last month, when did {asxy} most recently appear disconnected?",
+      "Within the last month, on what day were {asxy} last observed as disconnected by all {ip_protocol} {vp}?"
+    ]
+  }
+],
+"Did the last AS in AS paths for prefix p change?": [
+  {
+    "parameters": ["prefix", "vp", "time_interval"],
+    "templates": [
+      "Was there a change in the origin AS (the last AS in the AS path) for {prefix} {time_interval} according to {vp}?",
+      "Did the final AS, meaning the origin AS, in AS paths for {prefix} change {time_interval} as observed by {vp}?",
+      "{time_interval}, were there any modifications to the origin AS for {prefix} from {vp}?",
+      "According to {vp}, did the origin AS associated with {prefix} vary {time_interval}?",
+      "From observations made by {vp}, was the terminating AS (origin AS) in AS paths for {prefix} altered {time_interval}?",
+      "{time_interval}, did {prefix} experience any changes in the origin AS of its AS paths as seen from {vp}?",
+      "Can you determine whether the origin AS, i.e. the last AS in AS paths for {prefix}, changed {time_interval} according to {vp}?",
+      "Did routing data from {vp} indicate any changes to the origin AS in AS paths for {prefix} {time_interval}?",
+      "Were there any observed transitions in the origin AS of AS paths for {prefix} {time_interval} from {vp}?",
+      "As reported by {vp}, did the origin AS (last AS in the AS path) for {prefix} undergo any change {time_interval}?"
+    ]
+  }
+],
+"Was there a burst of withdrawals i.e., 2 times more withdrawals than the average on other time periods with the same duration?": [
+  {
+    "parameters": ["time_interval", "vp"],
+    "templates": [
+      "Was there a burst of withdrawals {time_interval} according to aggregated observations from {vp}, where the total withdrawals during the interval were at least twice the average aggregated withdrawals over the previous 10 days using the same interval duration?",
+      "Did the total number of withdrawals aggregated across {vp} during {time_interval} reach at least two times the average aggregated withdrawals computed from equivalent intervals over the previous 10 days?",
+      "According to aggregated routing observations from {vp}, was withdrawal activity during {time_interval} at least double the historical average calculated across the previous 10 days for intervals of the same duration?",
+      "Were the withdrawals aggregated from all {vp} during {time_interval} at least twice as high as the average aggregated withdrawals from comparable periods in the previous 10 days?",
+      "Did aggregated BGP withdrawal counts from {vp} during {time_interval} exceed two times the average aggregated withdrawal volume observed during equivalent intervals over the previous 10 days?",
+      "Can you determine whether the aggregated withdrawals observed from {vp} during {time_interval} were at least double the average aggregated withdrawals across equal-length intervals in the previous 10 days?",
+      "Did the total withdrawal volume aggregated across all {vp} during {time_interval} reach at least twice the historical average computed over equivalent intervals in the previous 10 days?",
+      "{time_interval}, did aggregated routing observations from {vp} show a withdrawal burst defined as at least two times the average aggregated withdrawals from equivalent periods during the previous 10 days?"
+    ]
+  }
+],
+"Rank the vantage points based on the number of updates they collected.": [
+  {
+    "parameters": ["time_interval", "vp"],
+    "templates": [
+      "Rank the vantage points in {vp} according to the total number of BGP updates they collected during {time_interval}.",
+      "According to the update counts observed during {time_interval}, how do the vantage points in {vp} rank by total collected updates?",
+      "Can you order the vantage points in {vp} by the quantity of routing updates they gathered during {time_interval}?",
+      "{time_interval}, classify the vantage points in {vp} according to the number of BGP updates they received.",
+      "What is the ranking of the vantage points in {vp} based on the total updates they recorded during {time_interval}?",
+      "Please sort the vantage points in {vp} by the volume of routing updates they monitored during {time_interval}.",
+      "From the observations collected during {time_interval}, how should the vantage points in {vp} be ranked by update activity?",
+      "Arrange the vantage points in {vp} according to the amount of BGP updates they captured during {time_interval}.",
+      "{time_interval}, which vantage points in {vp} collected the most updates, and how do they rank overall?",
+      "Based on routing data gathered during {time_interval}, provide a ranking of the vantage points in {vp} by total update count."
+    ]
+  }
+],
+"Give me the number of announcements that were collected for every hour.": [
+  {
+    "parameters": ["time_interval", "vp"],
+    "templates": [
+      "Can you provide the number of BGP announcement messages collected during each hour from {vp} {time_interval}?",
+      "How many BGP announcements were gathered during every hourly interval by {vp} {time_interval}?",
+      "Give me the hourly count of announcement messages recorded from {vp} {time_interval}.",
+      "What is the per-hour distribution of BGP announcements collected by {vp} {time_interval}?",
+      "{time_interval}, how many announcement messages were collected in each hour from {vp}?",
+      "Please list the number of BGP announcements observed during every hour by {vp} {time_interval}.",
+      "Can you show the hourly totals of announcement messages gathered from {vp} {time_interval}?",
+      "What were the announcement counts for each hour recorded by {vp} {time_interval}?",
+      "Provide the hourly aggregation of BGP announcement messages collected from {vp} {time_interval}.",
+      "How many announcement messages did {vp} collect during every hour {time_interval}?"
+    ]
+  }
+],
+"Which updates announce a blackholing communities?": [
+  {
+    "parameters": ["time_interval", "vp"],
+    "templates": [
+      "Which BGP updates announcing blackholing communities were observed by {vp} {time_interval}?",
+      "What updates indicate the use of blackholing communities according to {vp} {time_interval}?",
+      "Can you identify the routing updates containing blackholing communities as seen by {vp} {time_interval}?",
+      "{time_interval}, which updates observed from {vp} announced blackholing communities?",
+      "What BGP announcements associated with blackholing communities were collected from {vp} {time_interval}?",
+      "Which routing updates from {vp} include blackholing community attributes {time_interval}?",
+      "{time_interval}, what updates observed by {vp} indicate blackholing activity through BGP communities?",
+      "Can you list the BGP updates containing blackholing communities gathered from {vp} {time_interval}?",
+      "According to routing data collected from {vp}, which updates announced blackholing communities {time_interval}?",
+      "What updates observed by {vp} referenced blackholing communities {time_interval}?"
+    ]
+  }
+],
+"Which updates hold community c?": [
+  {
+    "parameters": ["vp", "community_set", "time_interval"],
+    "templates": [
+      "Which updates observed by {vp} {time_interval} contain the communities {community_set}?",
+      "What updates collected from {vp} {time_interval} include community values {community_set}?",
+      "{time_interval}, which BGP updates seen by {vp} carry the communities {community_set}?",
+      "Can you identify the updates from {vp} {time_interval} that hold communities {community_set}?",
+      "Which routing updates gathered by {vp} {time_interval} contain the community set {community_set}?",
+      "From observations made by {vp} {time_interval}, which updates are tagged with communities {community_set}?",
+      "{time_interval}, which updates collected by {vp} include community attributes {community_set}?",
+      "What BGP updates monitored by {vp} {time_interval} possess the communities {community_set}?",
+      "According to routing data from {vp}, which updates {time_interval} contain communities {community_set}?",
+      "Which updates recorded by {vp} {time_interval} are associated with community values {community_set}?"
+    ]
+  }
+],
+"Which are the AS paths where AS x appears?": [
+  {
+    "parameters": ["time_interval", "vp", "asx"],
+    "templates": [
+      "Which AS paths observed by {vp} {time_interval} contain AS{asx}?",
+      "What AS paths collected from {vp} {time_interval} include Autonomous System {asx}?",
+      "Can you identify the AS paths where AS{asx} appears as seen by {vp} {time_interval}?",
+      "{time_interval}, which AS paths observed from {vp} contain Autonomous System {asx}?",
+      "What AS paths associated with AS{asx} were collected from {vp} {time_interval}?",
+      "Which routing paths from {vp} include AS{asx} {time_interval}?",
+      "{time_interval}, what AS paths observed by {vp} show the presence of Autonomous System {asx}?",
+      "Can you list the AS paths containing AS{asx} gathered from {vp} {time_interval}?",
+      "According to routing data collected from {vp}, which AS paths {time_interval} contain Autonomous System {asx}?",
+      "What AS paths observed by {vp} referenced AS{asx} {time_interval}?"
+    ]
+  }
+],
+"Which updates use large communities?": [
+  {
+    "parameters": ["time_interval", "vp"],
+    "templates": [
+      "Which BGP updates using large communities were observed by {vp} {time_interval}?",
+      "What routing updates containing large communities were collected from {vp} {time_interval}?",
+      "Can you identify the BGP updates with large community attributes as seen by {vp} {time_interval}?",
+      "{time_interval}, which updates observed from {vp} utilized large communities?",
+      "What BGP announcements containing large communities were gathered from {vp} {time_interval}?",
+      "Which routing updates from {vp} included large community values {time_interval}?",
+      "{time_interval}, what updates observed by {vp} carried large communities?",
+      "Can you list the BGP updates containing large communities gathered from {vp} {time_interval}?",
+      "According to routing data collected from {vp}, which updates referenced large communities {time_interval}?",
+      "What updates observed by {vp} made use of large communities {time_interval}?"
+    ]
+  }
+],
+"How many prefixes can we see?": [
+  {
+    "parameters": ["time", "vp"],
+    "templates": [
+      "How many prefixes were visible from {vp} {time}?",
+      "What was the total number of prefixes observed by {vp} {time}?",
+      "{time}, how many routing prefixes could be seen from {vp}?",
+      "Can you provide the prefix visibility count observed by {vp} {time}?",
+      "What was the number of prefixes visible to {vp} {time}?",
+      "How many BGP prefixes were observable from {vp} {time}?",
+      "{time}, what was the count of prefixes seen by {vp}?",
+      "What prefix visibility was recorded by {vp} {time}?",
+      "How many network prefixes were visible from {vp} {time}?",
+      "According to {vp}, how many prefixes were visible {time}?"
+    ]
+  },
+
+  {
+    "parameters": ["time", "vp", "ip_protocol"],
+    "templates": [
+      "How many {ip_protocol} prefixes were visible from {vp} {time}?",
+      "What was the total number of {ip_protocol} prefixes observed by {vp} {time}?",
+      "{time}, how many {ip_protocol} routing prefixes could be seen from {vp}?",
+      "Can you provide the {ip_protocol} prefix visibility count observed by {vp} {time}?",
+      "What was the number of {ip_protocol} prefixes visible to {vp} {time}?",
+      "How many {ip_protocol} BGP prefixes were observable from {vp} {time}?",
+      "{time}, what was the count of {ip_protocol} prefixes seen by {vp}?",
+      "What {ip_protocol} prefix visibility was recorded by {vp} {time}?",
+      "How many {ip_protocol} network prefixes were visible from {vp} {time}?",
+      "According to {vp}, how many {ip_protocol} prefixes were visible {time}?"
+    ]
+  }
+],
+ "What are the routing changes for prefix p?":[
+  {
+    "parameters": ["time_interval", "vp", "prefix"],
+    "templates": [
+      "What routing changes were observed for {prefix} by {vp} {time_interval}?",
+      "Which routing updates affected {prefix} according to {vp} {time_interval}?",
+      "Can you identify the routing modifications for {prefix} as seen by {vp} {time_interval}?",
+      "{time_interval}, what routing changes occurred for {prefix} observed from {vp}?",
+      "What BGP routing updates related to {prefix} were collected from {vp} {time_interval}?",
+      "Which routing events for {prefix} were detected by {vp} {time_interval}?",
+      "{time_interval}, what routing adjustments for {prefix} were observed by {vp}?",
+      "Can you list the routing changes affecting {prefix} gathered from {vp} {time_interval}?",
+      "According to routing data collected from {vp}, what updates impacted {prefix} {time_interval}?",
+      "What routing modifications concerning {prefix} were reported by {vp} {time_interval}?"
+    ]
+  },
+  {
+    "parameters": ["time_interval", "vp", "prefix", "ip_protocol"],
+    "templates": [
+      "What {ip_protocol} routing changes were observed for {prefix} by {vp} {time_interval}?",
+      "Which {ip_protocol} routing updates affected {prefix} according to {vp} {time_interval}?",
+      "Can you identify the {ip_protocol} routing modifications for {prefix} as seen by {vp} {time_interval}?",
+      "{time_interval}, what {ip_protocol} routing changes occurred for {prefix} observed from {vp}?",
+      "What {ip_protocol} BGP routing updates related to {prefix} were collected from {vp} {time_interval}?",
+      "Which {ip_protocol} routing events for {prefix} were detected by {vp} {time_interval}?",
+      "{time_interval}, what {ip_protocol} routing adjustments for {prefix} were observed by {vp}?",
+      "Can you list the {ip_protocol} routing changes affecting {prefix} gathered from {vp} {time_interval}?",
+      "According to {ip_protocol} routing data collected from {vp}, what updates impacted {prefix} {time_interval}?",
+      "What {ip_protocol} routing modifications concerning {prefix} were reported by {vp} {time_interval}?"
+    ]
+  }
+],
+ "Does AS x appear in an AS path used to reach prefix p?": [
+    {
+      "parameters": ["time", "vp", "prefix", "asx"],
+      "templates": [
+        "{time}, does AS {asx} appear in an AS path used to reach {prefix} as observed by {vp}?",
+        "Do {vp} observe AS {asx} in one AS path toward {prefix} {time}?",
+        "Can you determine whether AS {asx} is part of an AS path to {prefix} according to {vp} {time}?",
+        "Was AS {asx} included in at least one AS path for reaching {prefix} from {vp} {time}?",
+        "{time}, did {vp} report AS {asx} within an AS path leading to {prefix}?",
+        "According to {vp}, does {prefix} use an AS path containing AS {asx} {time}?",
+        "{time}, was AS {asx} visible in one AS route toward {prefix} from {vp}?",
+        "Did {vp} detect AS {asx} in an AS path associated with {prefix} {time}?",
+        "Can AS {asx} be found in one AS path to {prefix} observed by {vp} {time}?",
+        "What do routing observations from {vp} {time} indicate about AS {asx} appearing in AS paths toward {prefix}?"
+      ]
+    }
+  ],
+"Can we see prefix p?": [
+  {
+    "parameters": ["time", "vp", "prefix"],
+    "templates": [
+      "Can {prefix} be seen from {vp} {time}?",
+      "Was the {prefix} visible to {vp} {time}?",
+      "{time}, could {vp} observe {prefix}?",
+      "Is {prefix} present in the routing data seen by {vp} {time}?",
+      "Were {vp} able to observe {prefix} {time}?",
+      "{time}, was {prefix} advertised and visible from {vp}?",
+      "Can {vp} detect {prefix} {time}?",
+      "Was {prefix} reachable according to {vp} {time}?",
+      "Did {vp} report visibility of {prefix} {time}?",
+      "According to {vp}, was {prefix} visible {time}?"
+    ]
+  }
+],
+"Which ASes originate prefix p?": [
+  {
+    "parameters": ["time", "vp", "prefix"],
+    "templates": [
+      "Which ASes originated {prefix} as observed by {vp} {time}?",
+      "{time}, which Autonomous Systems were announcing {prefix} according to {vp}?",
+      "Can you identify the ASes originating {prefix} from {vp} {time}?",
+      "What ASes were the originators of {prefix} as seen by {vp} {time}?",
+      "According to {vp}, which ASes advertised {prefix} {time}?",
+      "{time}, which ASes were responsible for announcing {prefix} from {vp}?",
+      "From {vp}, which ASes originated {prefix} {time}?",
+      "What were the origin ASes for {prefix} according to {vp} {time}?",
+      "Which ASes announced {prefix} as observed by {vp} {time}?"
+    ]
+  }
+],
+"How many bogon prefixes are announced by AS x?": [
+  {
+    "parameters": ["time", "vp", "asx"],
+    "templates": [
+      "How many bogon prefixes (i.e., prefixes that should never be routed over the public Internet) were announced by AS{asx} as observed from {vp} {time}?",
+      "What was the total number of bogon prefixes (i.e., prefixes that should never be routed over the public Internet) advertised by AS{asx} according to {vp} {time}?",
+      "{time}, how many bogon prefixes (i.e., prefixes that should never be routed over the public Internet) were being announced by AS{asx} from {vp}?",
+      "Can you provide the bogon prefix count (i.e., prefixes that should never be routed over the public Internet) announced by AS{asx} as seen by {vp} {time}?",
+      "How many bogon prefixes (i.e., prefixes that should never be routed over the public Internet) did AS{asx} advertise as observed from {vp} {time}?",
+      "{time}, what was the count of bogon routes (i.e., routes that should never be routed over the public Internet) originated by AS{asx} from {vp}?",
+      "What bogon prefix activity (i.e., involving prefixes that should never be routed over the public Internet) was recorded for AS{asx} by {vp} {time}?",
+      "How many bogon routing prefixes (i.e., prefixes that should never be routed over the public Internet) were visible from AS{asx} according to {vp} {time}?",
+      "According to {vp}, how many bogon prefixes (i.e., prefixes that should never be routed over the public Internet) were announced by AS{asx} {time}?"
+    ]
+  }
+],
+"What are the paths where AS x is at the origin, ie the last AS?": [
+  {
+    "parameters": ["time_interval", "vp", "asx"],
+    "templates": [
+      "What are the AS paths where AS{asx} was the origin AS, i.e., the last AS in the AS path, as observed from {vp} {time_interval}?",
+      "Which AS paths ended with AS{asx} according to {vp} {time_interval}?",
+      "Can you list the AS paths where AS{asx} appeared as the last AS from {vp} {time_interval}?",
+      "What AS paths originated from AS{asx} as seen by {vp} {time_interval}?",
+      "{time_interval}, which AS paths had AS{asx} as the origin AS according to {vp}?",
+      "Which AS paths observed by {vp} terminated at AS{asx} {time_interval}?",
+      "According to {vp}, what AS paths showed AS{asx} as the originating AS {time_interval}?",
+      "Can you identify the AS paths where AS{asx} was the final ASN as observed from {vp} {time_interval}?",
+      "What AS paths with origin AS{asx} were visible from {vp} {time_interval}?",
+      "At {vp}, which AS paths contained AS{asx} as the last AS {time_interval}?"
+    ]
+  }
+],
+"Among the ASes that announce an IPv4 prefix, what is the proportion that also announce an IPv6 prefix?": [
+  {
+    "parameters": ["time", "vp"],
+    "templates": [
+      "What proportion of ASes announcing an IPv4 prefix also announced an IPv6 prefix as observed from {vp} {time}?",
+      "{time}, what percentage of ASes advertising IPv4 prefixes were also advertising IPv6 prefixes according to {vp}?",
+      "How many ASes that announced IPv4 prefixes also originated IPv6 prefixes from {vp} {time}?",
+      "According to {vp}, what fraction of IPv4-announcing ASes also announced IPv6 prefixes {time}?",
+      "What was the ratio of ASes announcing both IPv4 and IPv6 prefixes as seen from {vp} {time}?",
+      "Can you determine the proportion of ASes with IPv4 announcements that also had IPv6 announcements from {vp} {time}?",
+      "What share of ASes advertising IPv4 routes were dual-stack announcers according to {vp} {time}?",
+      "How many IPv4-announcing ASes also appeared in IPv6 routing tables as observed from {vp} {time}?",
+      "Based on routing data from {vp} {time}, what percentage of ASes announcing IPv4 prefixes also announced IPv6 prefixes?"
+    ]
+  }
+],
+"How many 24 AS x is announcing?": [
+  {
+    "parameters": ["time", "vp", "asx"],
+    "templates": [
+      "{time}, how many /24 prefixes was AS{asx} announcing as observed from {vp}?",
+      "What was the total number of /24 prefixes advertised by AS{asx} according to {vp} {time}?",
+      "How many /24 routes originated from AS{asx} as seen by {vp} {time}?",
+      "Can you provide the count of /24 prefixes announced by AS{asx} from {vp} {time}?",
+      "{time}, what was the number of /24 announcements made by AS{asx} from {vp}?",
+      "How many /24 network prefixes did AS{asx} advertise according to {vp} {time}?",
+      "What was the quantity of /24 prefixes visible from AS{asx} as observed by {vp} {time}?"
+    ]
+  }
+],
+"What is the size of the RIB of peer p?": [
+  {
+    "parameters": ["time", "vp"],
+    "templates": [
+      "What is the size of the RIB for {vp} {time}?",
+      "How large is the routing information base observed from {vp} {time}?",
+      "Can you provide the RIB size as seen by {vp} {time}?",
+      "What is the routing information base size for {vp} {time}?",
+      "{time}, what is the RIB size viewed from {vp}?",
+      "What is the size of the routing table for {vp} {time}?",
+      "Could you tell me the RIB size observed from {vp} {time}?",
+      "{time}, how big is the RIB from the perspective of {vp}?",
+      "What RIB size was recorded for {vp} {time}?",
+      "How many entries are in the routing information base for {vp} {time}?"
+    ]
+  }
+],
+"How many distinct communitie values are related to AS x, i.e how many community values starts with x?": [
+  {
+    "parameters": ["time", "vp", "asx"],
+    "templates": [
+      "What is the total number of distinct community values associated with AS{asx} from {vp} {time}?",
+      "Can you provide the count of community values related to AS{asx}, i.e. starting with {asx}, according to {vp} {time}?",
+      "What was the number of distinct communities beginning with {asx} as seen from {vp} {time}?",
+      "According to {vp}, how many unique community values beginning with {asx} existed {time}?"
+    ]
+  }
+],
+"Which AS is using AS path prepending, i.e. same AS prepended?": [
+  {
+    "parameters": ["time", "vp"],
+    "templates": [
+      "Which AS is using AS path prepending with the same AS repeated as observed from {vp} {time}?",
+      "{time}, which autonomous systems were employing AS path prepending according to {vp}?",
+      "Can you identify the ASes repeating their own ASN in the AS path from {vp} {time}?",
+      "What autonomous systems were prepending their own AS number in BGP paths according to {vp} {time}?",
+      "Which autonomous systems were repeating the same AS in routing paths as observed from {vp} {time}?",
+      "According to {vp}, which ASes implemented AS path prepending {time}?",
+      "Which AS was engaging in AS path prepending by inserting its own ASN multiple times according to {vp} {time}?"
+    ]
+  }
+],
+"Which proportion of the route pass through AS x?": [
+  {
+    "parameters": ["time", "vp", "asx"],
+    "templates": [
+      "What proportion of routes pass through AS {asx} according to {vp} {time}?",
+      "{time}, what percentage of routing paths traversed AS {asx} as observed from {vp}?",
+      "Can you calculate the share of routes that go through AS {asx} from {vp} {time}?",
+      "What fraction of BGP routes passed through autonomous system {asx} according to {vp} {time}?",
+      "According to {vp}, what percentage of routes included AS {asx} {time}?",
+      "How much of the routing data traversed AS {asx} as seen from {vp} {time}?",
+      "What is the ratio of routes going through AS {asx} according to {vp} {time}?",
+      "{time}, what share of internet routes passed through AS {asx} from {vp}?",
+      "What percentage of observed BGP paths contained AS {asx} according to {vp} {time}?",
+      "Can you determine the proportion of routes that traveled through AS {asx} based on data from {vp} {time}?"
+    ]
+  }
+],
+"How often the AS path from AS x to AS y matches the inverted AS path between AS y to AS x?": [
+  {
+    "parameters": ["time", "vp", "asxy"],
+    "templates": [
+      "How frequently does the AS path from {asxy} match the reversed AS path according to {vp} {time}?",
+      "{time}, how often was the AS path between {asxy} symmetric as observed from {vp}?",
+      "Can you determine the frequency with which the AS path from {asxy} aligned with its inverse path from {vp} {time}?",
+      "What proportion of routes between {asxy} had mirrored AS paths according to {vp} {time}?",
+      "According to {vp}, how often did the path from {asxy} correspond to the inverted return path {time}?",
+      "{time}, how frequently were AS paths between {asxy} identical when reversed as seen from {vp}?",
+      "How regularly did the AS path from {asxy} mirror the reverse AS path according to {vp} {time}?",
+      "What was the occurrence rate of symmetric AS paths between {asxy} from {vp} {time}?",
+      "Can you calculate how often the AS route from {asxy} matched the reverse AS route according to {vp} {time}?",
+      "As observed from {vp} {time}, how often did AS paths between {asxy} form exact inverses?"
+    ]
+  }
+],
+"What is the visibility growth in terms number of distinct AS links observed for every VP?": [
+  {
+    "parameters": ["time_interval", "vp"],
+    "templates": [
+      "What is the visibility growth in terms of distinct AS links observed from {vp} {time_interval}?",
+      "How many additional unique AS links were observed by {vp} {time_interval}?",
+      "Can you provide the increase in the number of distinct AS links seen from {vp} {time_interval}?",
+      "How did the visibility of AS links evolve for {vp} {time_interval}?",
+      "What was the growth in observed AS-level links from {vp} {time_interval}?",
+      "{time_interval}, how much did the number of unique AS links increase for {vp}?",
+      "What change in distinct AS link visibility was recorded by {vp} {time_interval}?",
+      "Can you measure the visibility growth of AS links from {vp} {time_interval}?",
+      "How has the count of observed distinct AS links changed for {vp} {time_interval}?",
+      "What increase in AS link visibility did {vp} experience {time_interval}?"
+    ]
+  }
+],
+"Which prefixes are owned-originated by AS x?": [
+  {
+    "parameters": ["time", "vp", "asx"],
+    "templates": [
+      "{time}, which prefixes were originated by AS{asx} as observed from {vp}?",
+      "What prefixes owned by AS{asx} were detected by {vp} {time}?",
+      "Can you list the IP prefixes advertised by AS{asx} according to {vp} {time}?",
+      "What IP prefixes originated from AS{asx} according to {vp} {time}?",
+      "Can you provide the list of prefixes announced by AS{asx} from {vp} {time}?"
+    ]
+  },
+
+  {
+    "parameters": ["time", "vp", "asx", "ip_protocol"],
+    "templates": [
+      "{time}, which {ip_protocol} prefixes were originated by AS{asx} as observed from {vp}?",
+      "What {ip_protocol} prefixes owned by AS{asx} were detected by {vp} {time}?",
+      "Can you list the {ip_protocol} prefixes advertised by AS{asx} according to {vp} {time}?",
+      "What {ip_protocol} prefixes originated from AS{asx} according to {vp} {time}?",
+      "Can you provide the list of {ip_protocol} prefixes announced by AS{asx} from {vp} {time}?"
+    ]
+  }
+],
+"What is the percentage of single hop AS paths?": [
+  {
+    "parameters": ["time", "vp"],
+    "templates": [
+      "{time}, what percentage of AS paths consisted of a single hop as observed from {vp}?",
+      "What was the proportion of single hop AS paths according to {vp} {time}?",
+      "How many AS paths contained only one hop as seen from {vp} {time}, expressed as a percentage?",
+      "Can you provide the ratio of single hop AS paths observed by {vp} {time}?",
+      "According to {vp}, what fraction of AS paths were single hop {time}?",
+      "{time}, what share of the AS paths observed from {vp} had only one AS hop?",
+      "How frequently did single hop AS paths appear according to {vp} {time}?",
+      "What percentage of routing paths were composed of a single AS hop as seen from {vp} {time}?",
+      "{time}, what proportion of BGP AS paths were single hop according to {vp}?",
+      "What percentage of AS paths with exactly one hop was recorded by {vp} {time}?"
+    ]
+  },
+  {
+    "parameters": ["time", "vp", "ip_protocol"],
+    "templates": [
+      "{time}, what percentage of {ip_protocol} AS paths consisted of a single hop as observed from {vp}?",
+      "What was the proportion of {ip_protocol} single hop AS paths according to {vp} {time}?",
+      "How many {ip_protocol} AS paths contained only one hop as seen from {vp} {time}, expressed as a percentage?",
+      "Can you provide the ratio of {ip_protocol} single hop AS paths observed by {vp} {time}?",
+      "According to {vp}, what fraction of {ip_protocol} AS paths were single hop {time}?",
+      "{time}, what share of the {ip_protocol} AS paths observed from {vp} had only one AS hop?",
+      "How frequently did {ip_protocol} single hop AS paths appear according to {vp} {time}?",
+      "What percentage of {ip_protocol} routing paths were composed of a single AS hop as seen from {vp} {time}?",
+      "{time}, what proportion of {ip_protocol} BGP AS paths were single hop according to {vp}?",
+      "What percentage of {ip_protocol} AS paths with exactly one hop was recorded by {vp} {time}?"
+    ]
+  }
+],
+"What are the community values for prefix p?": [
+  {
+    "parameters": ["time", "vp", "prefix"],
+    "templates": [
+      "{time}, what community values were associated with {prefix} as observed from {vp}?",
+      "What BGP community values were assigned to {prefix} according to {vp} {time}?",
+      "Can you provide the community attributes for {prefix} as seen by {vp} {time}?",
+      "Which BGP community values were attached to {prefix} from {vp} {time}?",
+      "According to {vp}, what community tags were present for prefix {prefix} {time}?",
+      "{time}, what were the recorded community values for {prefix} from {vp}?",
+      "What community annotations were observed for {prefix} according to {vp} {time}?",
+      "Can you list the BGP community values associated with {prefix} as observed by {vp} {time}?",
+      "{time}, which community values were visible for {prefix} according to {vp}?",
+      "What community information was attached to {prefix} as recorded by {vp} {time}?"
+    ]
+  }
+]
+
+}
+
+    

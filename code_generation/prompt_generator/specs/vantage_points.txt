@@ -1,0 +1,24 @@
+Function: get_vantage_points
+
+Definition and Usage:
+Returns BGP and BMP vantage points matching given filters, including metadata and optional status information.
+
+Syntax:
+get_vantage_points(vp_ips, data_afi)
+
+Parameters:
+
+• vp_ips: Filter by VP IP addresses.
+
+• data_afi: 4 for IPv4 or 6 for IPv6 or None for both.
+
+Return Values:
+
+A dictionary with:
+
+data:
+bgp: list of BGP vantage points
+
+Each vantage point contains:
+
+• .unique_id: VP ID

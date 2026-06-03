@@ -1,0 +1,3015 @@
+
+You are an expert Python software engineer specialized in BGP routing analysis.
+
+Your ONLY task is:
+convert BGP routing questions into FULL EXECUTABLE PYTHON CODE.
+
+
+==================================================
+TRAINING EXAMPLES START
+==================================================
+
+USER QUESTION1:
+Which routing paths from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 include AS266011 during the period from May 20th, 2026 to May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer20.json"
+
+size = 0
+time = 0
+bgp2go = set()
+desired_paths = []
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+   
+    update_data = get_updates(
+        [vantage_point],
+        return_community = False,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        type_filter = 'A',
+        aspath_regexp= '(^| )'+str("266011")+'( |$)',
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, update_entries in bgp_updates.items():
+        if not update_entries:
+            continue
+        bgp2go.add(vantage_point.ip)
+        for update in update_entries:
+            as_path = update[3]
+           
+            desired_paths.append(as_path)
+            
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": desired_paths,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+
+USER QUESTION2:
+Is prefix 185.11.219.0/24 present in the routing data seen by collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer25.json"
+size = 0
+time = 0
+
+detected = False
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    ) 
+
+for vantage_point in selected_vantage_points:
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        return_aspath = False,
+        prefix_exact_match = ["185\.11\.219\.0/24"],
+        return_count = True,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    if bgp_data.get(str(vantage_point.unique_id),0) > 0:
+        bgp2go.add(vantage_point.ip)
+        detected = True
+        break
+    
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": "Yes" if detected else "No",
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION3:
+on 05/20/2026, what was the smallest AS-hop distance between Autonomous Systems 174 and 19429 according to routing data from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer5.json"
+
+size = 0
+time = 0
+
+shortest_distance = None
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp ='(^| )'+str(174)+' (|.* )'+str(19429)+'($| )|(^| )'+str(19429)+' (|.* )'+str(174)+'($| )',
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+
+        for prefix, entry in prefix_data.items():
+       
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            index_ASX = None
+            index_ASY = None
+
+            for index in range(0, len(asns)):
+                if int(174) == asns[index]:
+                    index_ASX = index
+                if int(19429) == asns[index]:
+                    index_ASY = index
+                    
+            if index_ASX is not None and index_ASY is not None:    
+  
+                if shortest_distance is None:
+                    shortest_distance = abs(index_ASX-index_ASY)
+
+                elif abs(index_ASX-index_ASY) < shortest_distance:
+                    shortest_distance = abs(index_ASX-index_ASY)
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": shortest_distance,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION4:
+during May 20th, 2026, how many unique Autonomous Systems using  were observed from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+answer_file = "../../evaluation/eval_results/answer1.json"
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+size = 0
+time = 0
+
+all_ases = set()
+bgp2go = set()
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+  
+    for vp_id, prefix_data in bgp_data.items():
+  
+        for prefix, entry in prefix_data.items():
+            
+            as_path = entry[0]
+            
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            for asn in asns:
+                all_ases.add(asn) 
+            
+
+number_of_ases = len(all_ases)
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": number_of_ases,
+    "bgp2go":list(bgp2go)
+    
+}
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+USER QUESTION5:
+during May 20th, 2026, what average  AS path length, measured by the number of ASNs in the AS path, was reported by collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import numpy as np
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer2.json"
+
+size = 0
+time = 0
+aspath_lengths = []
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+     
+        for prefix, entry in prefix_data.items():
+            
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            aspath_lengths.append(len(asns))
+
+average = float(np.mean(aspath_lengths)) if aspath_lengths else 0.0  
+          
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": average,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION6:
+Were there any observed transitions in the origin AS of AS paths for subnet 69.3.204.0/24 from 5/20/26 to 5/20/26 from BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer14.json"
+
+size = 0
+time = 0
+
+last_as_set = set()
+found = False
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    update_data = get_updates(
+        [vantage_point],
+        return_community = False,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        prefix_exact_match=["69\.3\.204\.0/24"], 
+        type_filter = 'A',
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+
+    for vp_id, update_entries in bgp_updates.items():
+        if not update_entries:
+            continue
+        for update in update_entries:
+            as_path = update[3]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            if len(asns) == 0:
+                continue
+       
+            last_as_set.add(asns[-1])
+
+            if len(last_as_set) > 1:
+                
+                found = True
+                break
+         
+    if found:
+        break
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": "Yes" if len(last_as_set) > 1 else "No",
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION7:
+Can you provide the count of /24 prefixes announced by AS7545 from BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer30.json"
+size = 0
+time = 0
+
+prefixes_24 = set()
+
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp='(^| )'+str("7545")+'$',
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        if not prefix_data:
+            continue
+        bgp2go.add(vantage_point.ip)
+        for prefix in prefix_data.keys():
+            if prefix.endswith("/24"):
+                prefixes_24.add(prefix)
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": len(prefixes_24),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+                          
+
+
+USER QUESTION8:
+Within the last month, when was the  connection between AS pairs 2914 and 12654 first observed in routing data collected from BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+
+answer_file = "../../evaluation/eval_results/answer11.json"
+
+size = 0
+time = 0
+bgp2go = set()
+
+end_date = datetime.combine(
+    datetime.today().date(),
+    datetime.min.time()
+)
+
+start_date = end_date - relativedelta(months=1)
+
+current_date = start_date
+first_update_observed_time = None
+earliest_day_found = None
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    data_afi=None,
+)
+
+while current_date < end_date:
+
+    if (
+        earliest_day_found is not None
+        and current_date.date() > earliest_day_found
+    ):
+        break
+
+    next_day = min(current_date + timedelta(days=1), end_date)
+
+    for vantage_point in selected_vantage_points:
+
+        update_data = get_updates(
+            [vantage_point],
+            return_community=False,
+            start_date=current_date.strftime('%Y-%m-%dT%H:%M:%S'),
+            end_date=next_day.strftime('%Y-%m-%dT%H:%M:%S'),
+            aspath_regexp='(^| )'+str(2914)+' '+str(12654)+'($| )|(^| )'+str(12654)+' '+str(2914)+'($| )',
+            chronological_order=True,
+            max_updates_to_return=1,
+            details=True,
+        )
+
+        bgp_updates = update_data.get("data", {}).get("bgp", {})
+        time_info = update_data.get("seconds", 0)
+        size_info = update_data.get("bytes", 0)
+
+        size += size_info
+        time += time_info
+
+        for vp_id, update_entries in bgp_updates.items():
+
+            if not update_entries:
+                continue
+
+            bgp2go.add(vantage_point.ip)
+
+            first_time = update_entries[0][0]
+
+            if (
+                first_update_observed_time is None
+                or first_time < first_update_observed_time
+            ):
+                first_update_observed_time = first_time
+
+                earliest_day_found = datetime.fromtimestamp(
+                    first_time
+                ).date()
+
+    current_date = next_day
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": first_update_observed_time,
+    "bgp2go": list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION9:
+over the interval between May 20th, 2026 and May 20th, 2026, classify the vantage points in vantage points 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 according to the number of BGP updates they received.
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer16.json"
+size = 0
+time = 0
+
+vp_and_nb_updates_tuple = []
+bgp2go  =set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+   
+    update_data = get_updates(
+        [vantage_point],
+        return_community = False,
+        return_aspath = False,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        return_count = True,
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    vp_updates = bgp_updates.get(str(vantage_point.unique_id))
+
+    if vp_updates is None:
+        continue
+    
+    bgp2go.add(vantage_point.ip)
+    
+    number_of_withdrawals = bgp_updates.get(str(vantage_point.unique_id)).get("W",0)
+    number_of_announcements = bgp_updates.get(str(vantage_point.unique_id)).get("A",0)
+    
+    number_of_updates = number_of_announcements + number_of_withdrawals
+
+    vp_and_nb_updates_tuple.append({
+        'vp': str(vantage_point.unique_id), 
+        'updates':number_of_updates})
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": sorted(vp_and_nb_updates_tuple, key=lambda x: x['updates'], reverse=True),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION10:
+Identify the ASes that exclusively appear at the start or end points of AS paths, never in the middle, and possess at least two unique adjacent ASes as observed in BGP data from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on May 20th, 2026.
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer4.json"
+
+size = 0
+time = 0
+
+middle_ases = set()
+bgp2go = set()
+AS_stub_dic = {}
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+
+    for vp_id, prefix_data in bgp_data.items():
+        
+        for prefix, entry in prefix_data.items():
+           
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) < 2:
+                continue
+
+            if asns[0] not in AS_stub_dic:
+                AS_stub_dic[asns[0]] = set()
+            AS_stub_dic[asns[0]].add(asns[1])
+        
+            if asns[-1] not in AS_stub_dic:
+                AS_stub_dic[asns[-1]] = set()
+            AS_stub_dic[asns[-1]].add(asns[-2])
+                
+            for asn in asns[1:-1]:
+                middle_ases.add(asn)
+                     
+returned_ases = set()
+
+for asn in AS_stub_dic:
+    if asn not in middle_ases:
+        if len(AS_stub_dic[asn]) > 1:
+            returned_ases.add(asn)
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": sorted(list(returned_ases)),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION11:
+How did the visibility of AS links evolve for VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 from 5/20/26 to 5/20/26?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer36.json"
+time = 0
+size = 0
+bgp2go = set()
+def get_as_links_vantage_point(vantage_point, date):
+    global size, time, bgp2go
+    
+    as_links = set()
+    rib_data = get_rib(
+        [vantage_point], 
+        date = date, 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        if not prefix_data:
+            continue
+
+        for prefix, entry in prefix_data.items():
+
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) == 0:
+                continue
+            
+            for i in range(len(asns) - 1):
+            
+                as_links.add((asns[i], asns[i+1]))
+
+    return as_links
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+)
+
+result = []
+for vantage_point in selected_vantage_points:
+
+    start_as_links = get_as_links_vantage_point(vantage_point, "2026-05-20T00:00:00")
+    end_as_links = get_as_links_vantage_point(vantage_point, "2026-05-20T23:59:59")
+
+    as_links_increase = (len(end_as_links) - len(start_as_links)) / len(start_as_links) if len(start_as_links) > 0 else 0
+
+    result.append({
+    "vp": str(vantage_point.unique_id),
+    "increase_pct": as_links_increase * 100
+})
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": result,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+
+USER QUESTION12:
+What  prefixes originated from AS397921 according to collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 05/20/2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer37.json"
+size = 0
+time = 0
+bgp2go = set()
+prefixes_announced_by_AS = set()
+  
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp='(^| )' + str("397921") + '$',
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        if not prefix_data:
+            continue
+        
+        bgp2go.add(vantage_point.ip)
+        for prefix in prefix_data.keys():
+            prefixes_announced_by_AS.add(prefix)
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": list(prefixes_announced_by_AS),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION13:
+on 05/20/2026, which ASes were responsible for announcing prefix 2a02:ac80:b000::/48 from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer26.json"
+size = 0
+time = 0
+announcing_ases = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    ) 
+
+for vantage_point in selected_vantage_points:
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        prefix_exact_match = ["2a02:ac80:b000::/48"],
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        
+        for prefix, entry in prefix_data.items():
+           
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+        
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) > 0:
+        
+                announcing_ases.add(asns[-1])
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": list(announcing_ases),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION14:
+Can you provide a list of ASes directly connected to Autonomous System 6057 in observed AS paths from VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 5/20/26?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import networkx as nx
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer3.json"
+
+size = 0
+time = 0
+
+AS_topology = nx.Graph()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp='(^| )'+str("6057")+'( |$)',
+        details = True,
+        ) 
+    
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+
+        for prefix, entry in prefix_data.items():
+            
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+           
+            for i in range(0, len(asns)-1):
+    
+                AS_topology.add_edge(asns[i], asns[i+1])
+            
+neighbors = []
+
+if int("6057") in AS_topology:
+    neighbors = sorted(list(AS_topology.neighbors(int("6057"))))
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": neighbors,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION15:
+Which updates recorded by VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 between May 20th, 2026 and May 20th, 2026 are associated with community values 394177:50:6939 or 5511:3100?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer19.json"
+size = 0
+time = 0
+
+desired_updates = []
+bgp2go = set()
+community_regex = "(^| )394177:50:6939( |$)&(^| )5511:3100( |$)".replace(",", "|")
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+    
+    update_data = get_updates(
+        [vantage_point],
+        return_community = True,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        community_regexp=community_regex,
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    for vp_id, update_entries in bgp_updates.items():
+        if not update_entries:
+            continue
+        bgp2go.add(vantage_point.ip)
+        for update in update_entries:
+            desired_updates.append(update)
+        
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": desired_updates,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+
+USER QUESTION16:
+Using routing observations from VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during the last month, when did AS6057 and AS6939 most recently appear disconnected?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+from datetime import datetime, timedelta
+import os
+import json
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+
+answer_file = "../../evaluation/eval_results/answer13.json"
+
+size = 0
+time = 0
+result = None
+bgp2go = set()
+end_date = datetime.combine(
+    datetime.today().date(),
+    datetime.min.time()
+)
+start_date = end_date - relativedelta(months=1)
+
+current_date = end_date
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    data_afi=None,
+)
+
+while current_date > start_date:
+
+    connected = False
+
+    for vantage_point in selected_vantage_points:
+
+        number_of_entries = get_rib(
+            [vantage_point], 
+            date = current_date.strftime('%Y-%m-%dT%H:%M:%S'), 
+            return_community = False,
+            aspath_regexp='(^| )'+str(6057)+' '+str(6939)+'($| )|(^| )'+str(6939)+' '+str(6057)+'($| )',
+            return_count=True,
+            details = True,
+        ) 
+
+        bgp_data = number_of_entries.get("data", {}).get("bgp", {})
+        time_info = number_of_entries.get("seconds")
+        size_info = number_of_entries.get("bytes")
+    
+        size += size_info or 0
+        time += time_info or 0
+        if bgp_data.get(str(vantage_point.unique_id),0) > 0:
+            bgp2go.add(vantage_point.ip)
+            connected = True
+            result = {
+                'status': "connected",
+                'date': None
+            }
+            break
+        
+    if not connected:
+        print (current_date)
+        result = {
+                'status': "disconnected",
+                'date': current_date.strftime('%Y-%m-%dT%H:%M:%S')
+            }
+        break
+    
+    current_date = current_date - timedelta(days=1)
+    
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": result,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION17:
+throughout May 20th, 2026, which community values were visible for 45.149.57.0/24 according to collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer39.json"
+size = 0
+time = 0
+
+community_set = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = True,
+        return_aspath = False,
+        prefix_exact_match = ["45\.149\.57\.0/24"],
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        if not prefix_data:
+            continue
+        
+        bgp2go.add(vantage_point.ip)
+        for prefix, entry in prefix_data.items():
+         
+            # Second field = Community String
+            community_str = entry[1]
+            if not community_str:
+                continue
+        
+            community_list = community_str.split()
+            
+            for community_value in community_list:
+                community_set.add(community_value)
+ 
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": list(community_set),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+USER QUESTION18:
+How frequently did single hop AS paths appear according to VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer38.json"
+size = 0
+time = 0
+bgp2go = set()
+single_hop_count = 0
+total_count = 0
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        if not prefix_data:
+            continue
+
+        for prefix, entry in prefix_data.items():
+      
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            total_count += 1
+            
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) == 2:
+                single_hop_count += 1
+            
+ratio = single_hop_count / total_count if total_count > 0 else 0
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": ratio * 100,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION19:
+What was the number of distinct communities beginning with 205112 as seen from BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 05/20/2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer32.json"
+size = 0
+time = 0
+
+distinct_communities = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_aspath = False,
+        return_community = True,
+        community_regexp='( |^)'+str("205112")+':.*',
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        
+        for prefix, entry in prefix_data.items():
+           
+            community_list = entry[1]
+            if not community_list:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+    
+            for community in community_list.split(' '):
+        
+                if community.startswith(str("205112")+':'):
+                    distinct_communities.add(community)
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": len(distinct_communities),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+
+USER QUESTION20:
+How large is the routing information base observed from collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+from collections import defaultdict
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer31.json"
+size = 0
+time = 0
+rib_sizes = defaultdict(int)
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+    number_of_entries = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        return_aspath = False,
+        return_count = True,
+        details = True,
+        ) 
+
+    bgp_data = number_of_entries.get("data", {}).get("bgp", {})
+    time_info = number_of_entries.get("seconds")
+    size_info = number_of_entries.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    r_size = bgp_data.get(str(vantage_point.unique_id),0)
+    
+    bgp2go.add(vantage_point.ip)
+    
+    rib_sizes[str(vantage_point.unique_id)] = r_size
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": rib_sizes,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION21:
+According to VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, which ASes implemented AS path prepending on 05/20/2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer33.json"
+size = 0
+time = 0
+
+ases_using_prepending = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+
+        for prefix, entry in prefix_data.items():
+           
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) == 0:
+                continue
+            
+            for i in range(len(asns) - 1):
+                if asns[i] == asns[i+1]:
+                    ases_using_prepending.add(asns[i])
+                    
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": list(ases_using_prepending),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+
+
+USER QUESTION22:
+Using observations from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, when was the most recent update recorded for IP prefix 2001:16a4:444::/47 during the last month?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+
+answer_file = "../../evaluation/eval_results/answer12.json"
+
+size = 0
+time = 0
+bgp2go = set()
+results = []
+
+end_date = datetime.combine(
+    datetime.today().date(),
+    datetime.min.time()
+)
+
+start_date = end_date - relativedelta(months=1)
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    data_afi=None,
+)
+
+for vantage_point in selected_vantage_points:
+
+    current_date = end_date
+
+    found = False
+
+    while current_date > start_date and not found:
+
+        prev_day = max(
+            current_date - timedelta(days=1),
+            start_date
+        )
+
+        update_data = get_updates(
+            [vantage_point],
+            return_community=False,
+            return_aspath=False,
+            start_date=prev_day.strftime('%Y-%m-%dT%H:%M:%S'),
+            end_date=current_date.strftime('%Y-%m-%dT%H:%M:%S'),
+            prefix_exact_match=["2001:16a4:444::/47"],
+            chronological_order=False,
+            max_updates_to_return=1,
+            details=True,
+        )
+
+        bgp_updates = update_data.get("data", {}).get("bgp", {})
+        time_info = update_data.get("seconds", 0)
+        size_info = update_data.get("bytes", 0)
+
+        size += size_info
+        time += time_info
+
+        for vp_id, update_entries in bgp_updates.items():
+
+            if not update_entries:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+
+            last_time = update_entries[0][0]
+
+            results.append({
+                'vp': str(vantage_point.unique_id),
+                'last_time': last_time,
+            })
+
+            found = True
+            break
+
+        current_date = prev_day
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": results,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION23:
+Can you calculate how often the AS route from Autonomous Systems 6315 and 6057 matched the reverse AS route according to collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer35.json"
+size = 0
+time = 0
+
+total_paths = 0
+matching_paths = 0
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+    
+    rib_6315_to_6057 = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp='(^| )'+str(6315)+' (|.* )'+str(6057)+'($| )',
+        details = True,
+        ) 
+    
+    rib_6057_to_6315 = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp='(^| )'+str(6057)+' (|.* )'+str(6315)+'($| )',
+        details = True,
+        ) 
+    
+    bgp_6315_to_asy_data = rib_6315_to_6057.get("data", {}).get("bgp", {})
+    time_info_x = rib_6315_to_6057.get("seconds")
+    size_info_x = rib_6315_to_6057.get("bytes")
+    
+    size += size_info_x or 0
+    time += time_info_x or 0
+    
+    bgp_6057_to_asx_data = rib_6057_to_6315.get("data", {}).get("bgp", {})
+    time_info_y = rib_6057_to_6315.get("seconds")
+    size_info_y = rib_6057_to_6315.get("bytes")
+    
+    size += size_info_y or 0
+    time += time_info_y or 0
+    
+    for vp_id, prefix_asx_to_asy_data in bgp_6315_to_asy_data.items():
+        if not prefix_asx_to_asy_data:
+            continue
+        
+        bgp2go.add(vantage_point.ip)
+        for prefix, entry in prefix_asx_to_asy_data.items():
+
+            aspath_6315_to_6057 = entry[0]
+            if not aspath_6315_to_6057:
+                continue
+            
+            total_paths+=1
+            
+            asns_6315_to_6057 = [int(asn) for asn in aspath_6315_to_6057.split() if asn.isdigit()]
+            
+            sub_aspath_6315_to_6057 = asns_6315_to_6057[asns_6315_to_6057.index(int(6315)):asns_6315_to_6057.index(int(6057))+1]
+            
+            found_match = False
+    
+            for vp_id, prefix_asy_to_asx_data in bgp_6057_to_asx_data.items():
+                if not prefix_asy_to_asx_data:
+                    continue
+                
+                bgp2go.add(vantage_point.ip)
+
+                for prefix, entry in prefix_asy_to_asx_data.items():
+                    
+                    aspath_6057_to_6315 = entry[0]
+                    if not aspath_6057_to_6315:
+                        continue
+                    
+                    asns_6057_to_6315 = [int(asn) for asn in aspath_6057_to_6315.split() if asn.isdigit()]
+                    
+                    sub_aspath_6057_to_6315 = asns_6057_to_6315[asns_6057_to_6315.index(int(6057)):asns_6057_to_6315.index(int(6315))+1]
+                    
+                    if sub_aspath_6315_to_6057 == sub_aspath_6057_to_6315[::-1]:
+                        found_match = True
+                        matching_paths += 1
+                        break
+                    
+                if found_match:
+                    break
+                
+if total_paths > 0:
+    proportion = matching_paths / total_paths
+else:
+    proportion = 0
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": proportion,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+
+USER QUESTION24:
+How many bogon routing prefixes (i.e., prefixes that should never be routed over the public Internet) were visible from AS199242 according to BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 throughout May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer27.json"
+size = 0
+time = 0
+
+bogon_prefixes = set()
+bgp2go = set()
+# Source: https://bgpfilterguide.nlnog.net/guides/bogon_prefixes/
+# Source: https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml
+# Source: https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml
+bogon_prefixes_list = [
+    ("=", "0.0.0.0/8"),          # RFC 1122 ‘this’ network
+    ("=", "0.0.0.0/32"),          # This host on this network
+    ("=", "10.0.0.0/8"),         # RFC 1918 private space
+    ("=", "100.64.0.0/10"),      # RFC 6598 Carrier grade nat space
+    ("=", "127.0.0.0/8"),        # RFC 1122 localhost
+    ("<<=", "169.254.0.0/16"),     # RFC 3927 link local
+    ("=", "172.16.0.0/12"),      # RFC 1918 private space
+    ("<<=", "192.0.2.0/24"),       # RFC 5737 TEST-NET-1
+    ("<<=", "192.0.0.0/24"),       # IETF Protocol Assignments
+    ("=", "192.0.0.8/32"),       # IPv4 dummy address
+    ("=", "192.0.0.170/32"),       # NAT64/DNS64 Discovery
+    ("=", "192.0.0.171/32"),       # NAT64/DNS64 Discovery
+    ("<<=", "192.168.0.0/16"),     # RFC 1918 private space
+    ("<<=", "192.88.99.0/24"),     # RFC 7526 6to4 anycast relay
+    ("=", "198.18.0.0/15"),      # RFC 2544 benchmarking
+    ("<<=", "198.51.100.0/24"),    # RFC 5737 TEST-NET-2
+    ("<<=", "203.0.113.0/24"),     # RFC 5737 TEST-NET-3
+    ("=", "224.0.0.0/4"),        # multicast
+    ("=", "240.0.0.0/4"),        # reserved
+    ("=", "255.255.255.255/32"),        # Limited Broadcast
+ 
+    ("=", "::/128"),             # unspecified
+    ("=", "::1/128"),            # loopback
+    ("<<=", "::ffff:0:0/96"),      # IPv4-mapped
+    ("<<=", "64:ff9b:1::/48"),      # IPv4-IPv6 Translat.
+    ("<<=", "::/96"),              # deprecated
+    ("<<=", "100::/64"),           # RFC 6666 Discard-Only
+    ("<<=", "100:0:0:1::/64"),           # Dummy IPv6 Prefix
+    ("<<=", "2001:2::/48"),       # RFC 5180 Benchmarking
+    ("=", "2001::/23"),       # IETF Protocol Assignments
+    #("<<=", "2001::/32"),       # TEREDO
+    ("=", "2001:10::/28"),       # RFC 4843 Deprecated (previously ORCHID)
+    #("=", "2002::/16"),       # RFC3056 6to4
+    #("<<=", "2620:4f:8000::/48"),       # Direct Delegation AS112 Service
+    ("=", "3ffe::/16"),       # RFC 3701 old 6bone
+    ("=", "3fff::/20"),       # RFC 9637 documentation
+    ("=", "5f00::/16"),       # RFC 9602 SRv6 SIDs
+    ("<<=", "2001:db8::/32"),      # RFC 3849 documentation
+    ("=", "fc00::/7"),           # RFC 4193 unique local unicast
+    ("=", "fe80::/10"),          # RFC 4291 link local unicast
+    ("=", "fec0::/10"),          # RFC 3879 old site local unicast
+    ("=", "ff00::/8"),           # RFC 4291 multicast
+]
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+  
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp='(^| )'+str("199242")+'$',
+        prefix_filter=bogon_prefixes_list, 
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    # For every asn in the AS path.
+    for vp_id, prefix_data in bgp_data.items():
+        
+        
+        for prefix in prefix_data.keys():
+            bogon_prefixes.add(prefix)
+            bgp2go.add(vantage_point.ip)
+            
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": len(bogon_prefixes),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+USER QUESTION25:
+What ASes were directly adjacent to AS 37662 while themselves appearing only in intermediate AS-path positions according to vantage points 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer7.json"
+
+size = 0
+time = 0
+
+input_AS_transit_neighbors = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+  
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        aspath_regexp='(^| )'+str("37662")+'( |$)',
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+    
+        for prefix, entry in prefix_data.items():
+         
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            for index in range(1, len(asns)-1):
+  
+                if int("37662") == asns[index-1] or int("37662") == asns[index+1]:
+                    input_AS_transit_neighbors.add(asns[index])
+       
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": sorted(list(input_AS_transit_neighbors)),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+USER QUESTION26:
+Based on  BGP observations from VPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during the last month, when did AS50629 first enter the routing table?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+
+answer_file = "../../evaluation/eval_results/answer10.json"
+
+size = 0
+time = 0
+bgp2go = set()
+
+end_date = datetime.combine(
+    datetime.today().date(),
+    datetime.min.time()
+)
+
+start_date = end_date - relativedelta(months=1)
+
+current_date = start_date
+
+first_update_observed_time = None
+earliest_day_found = None
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    data_afi=None,
+)
+
+while current_date < end_date:
+
+    # Optimization:
+    # If we already found an update on an earlier day,
+    # there is no reason to search later days.
+    if (
+        earliest_day_found is not None
+        and current_date.date() > earliest_day_found
+    ):
+        break
+
+    next_day = min(
+        current_date + timedelta(days=1),
+        end_date
+    )
+
+    for vantage_point in selected_vantage_points:
+
+        update_data = get_updates(
+            [vantage_point],
+            return_community=False,
+            start_date=current_date.strftime('%Y-%m-%dT%H:%M:%S'),
+            end_date=next_day.strftime('%Y-%m-%dT%H:%M:%S'),
+            aspath_regexp='(^| )' + str("50629") + '( |$)',
+            chronological_order=True,
+            max_updates_to_return=1,
+            details=True,
+        )
+
+        bgp_updates = update_data.get("data", {}).get("bgp", {})
+        time_info = update_data.get("seconds", 0)
+        size_info = update_data.get("bytes", 0)
+
+        size += size_info
+        time += time_info
+
+        for vp_id, update_entries in bgp_updates.items():
+
+            if not update_entries:
+                continue
+
+            bgp2go.add(vantage_point.ip)
+
+            first_time = update_entries[0][0]
+
+            if (
+                first_update_observed_time is None
+                or first_time < first_update_observed_time
+            ):
+
+                first_update_observed_time = first_time
+
+                # Store the day of the earliest observation
+                earliest_day_found = datetime.fromtimestamp(
+                    first_time
+                ).date()
+
+    current_date = next_day
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": first_update_observed_time,
+    "bgp2go": list(bgp2go)
+}
+
+os.makedirs(
+    os.path.dirname(answer_file),
+    exist_ok=True
+)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION27:
+Did  BGP observations from collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 show AS pairs 52974 and 6057 as adjacent ASes at 12:00:00 AM on May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer6.json"
+
+size = 0
+time = 0
+final = None
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    data_afi=None
+)
+
+for vantage_point in selected_vantage_points:
+    number_of_entries = get_rib(
+        [vantage_point],
+        date="2026-05-20T00:00:00",
+        return_community=False,
+        aspath_regexp='(^| )'+str(52974)+' '+str(6057)+'($| )|(^| )'+str(6057)+' '+str(52974)+'($| )',
+        return_count=True,
+        details = True,
+        ) 
+
+    bgp_data = number_of_entries.get("data", {}).get("bgp", {})
+    time_info = number_of_entries.get("seconds")
+    size_info = number_of_entries.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+
+    if bgp_data.get(str(vantage_point.unique_id),0) > 0:
+        bgp2go.add(vantage_point.ip)
+        final = "Yes"
+        break
+    
+if final == None:
+    final = "No"
+        
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": final,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+USER QUESTION28:
+What updates indicate the use of blackholing communities according to collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 over the interval between May 20th, 2026 and May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer18.json"
+size = 0
+time = 0
+
+# RFC7999 BLACKHOLE community value is 65535:666.
+blackholing_community_regexp = r'(^| )65535:666( |$)'
+
+bgp2go = set()
+desired_updates = []
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    update_data = get_updates(
+        [vantage_point],
+        return_community = True,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        community_regexp = '(^| )'+blackholing_community_regexp+'( |$)',
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+
+    for vp_id, update_entries in bgp_updates.items():
+        if not update_entries:
+            continue
+        bgp2go.add(vantage_point.ip)
+        for update in update_entries:
+            desired_updates.append(update)
+        
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": desired_updates,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+USER QUESTION29:
+Did the total number of withdrawals aggregated across routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during between May 20th, 2026 and May 20th, 2026 reach at least two times the average aggregated withdrawals computed from equivalent intervals over the previous 10 days?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+from datetime import datetime, timedelta
+import numpy as np
+import os
+import json
+
+
+answer_file = "../../evaluation/eval_results/answer15.json"
+size = 0
+time = 0
+
+bgp2go = set()
+nb_updates_targeted_time_period = 0
+nb_updates_other_time_periods = []
+
+
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    update_data = get_updates(
+        [vantage_point],
+        return_community = False,
+        return_aspath = False,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        type_filter = 'W',
+        return_count = True,
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    vp_updates = bgp_updates.get(str(vantage_point.unique_id))
+
+    if vp_updates is None:
+        continue
+    
+    bgp2go.add(vantage_point.ip)
+    number_of_withdrawals = bgp_updates.get(str(vantage_point.unique_id)).get("W",0)
+    nb_updates_targeted_time_period += number_of_withdrawals
+
+for period_shift_day in range (1, 10):
+    start_date_tmp = datetime.strptime("2026-05-20T00:00:00", '%Y-%m-%dT%H:%M:%S') - timedelta(days=period_shift_day)
+    end_date_tmp = datetime.strptime("2026-05-20T23:59:59", '%Y-%m-%dT%H:%M:%S') - timedelta(days=period_shift_day)
+    
+    nb_updates_other_time_periods.append(0)
+        
+    for vantage_point in selected_vantage_points:
+        update_data = get_updates(
+            [vantage_point], 
+            return_aspath = False,
+            return_community = False, 
+            start_date=start_date_tmp.strftime('%Y-%m-%dT%H:%M:%S'), 
+            end_date=end_date_tmp.strftime('%Y-%m-%dT%H:%M:%S'),
+            type_filter='W', 
+            return_count=True,
+            details = True,
+        ) 
+
+        bgp_updates = update_data.get("data", {}).get("bgp", {})
+        time_info = update_data.get("seconds")
+        size_info = update_data.get("bytes")
+    
+        size += size_info or 0
+        time += time_info or 0
+        vp_updates = bgp_updates.get(str(vantage_point.unique_id))
+
+        if vp_updates is None:
+            continue
+        
+        bgp2go.add(vantage_point.ip)
+        number_of_withdrawals = bgp_updates.get(str(vantage_point.unique_id)).get("W",0)
+     
+        nb_updates_other_time_periods[-1] += number_of_withdrawals
+        
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": "Yes" if nb_updates_targeted_time_period > 2*np.mean(nb_updates_other_time_periods) else "No",
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION30:
+Was AS 205112 included in at least one AS path for reaching 177.225.124.0/24 from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer24.json"
+
+size = 0
+time = 0
+
+detected = False
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    ) 
+
+for vantage_point in selected_vantage_points:
+   
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        prefix_exact_match = ["177\.225\.124\.0/24"],
+        aspath_regexp='(^| )'+str("205112")+'( |$)',
+        return_count = True,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    if bgp_data.get(str(vantage_point.unique_id),0) > 0:
+        bgp2go.add(vantage_point.ip)
+        detected = True
+        break
+    
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": "Yes" if detected else "No",
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION31:
+How many network prefixes were visible from VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer22.json"
+size = 0
+time = 0
+
+total_prefixes = 0
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+   
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        return_aspath = False,
+        return_count = True,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+
+    for vp_id, prefix_count in bgp_data.items():
+        bgp2go.add(vantage_point.ip)
+      
+        total_prefixes += prefix_count
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": total_prefixes,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+USER QUESTION32:
+What percentage of observed BGP paths contained AS 48555 according to collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 at 12:00:00 AM on May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer34.json"
+size = 0
+time = 0
+route_count_as = 0
+total_route_count = 0
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        if not prefix_data:
+            continue
+
+        for prefix, entry in prefix_data.items():
+           
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) == 0:
+                continue
+    
+            total_route_count += 1
+            
+            if int("48555") in asns:
+               
+                route_count_as += 1
+        
+proportion = (route_count_as / total_route_count) if total_route_count != 0  else 0
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": proportion,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+
+USER QUESTION33:
+How many ASes are consistently found only in interior AS-path positions, but never at terminal positions, according to BGP data from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer9.json"
+
+size = 0
+time = 0
+
+ases_int_the_middle = set()
+ases_at_the_ends = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+
+        for prefix, entry in prefix_data.items():
+          
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            if len(asns) == 0:
+                continue
+            
+            for asn in asns[1:-1]:
+                ases_int_the_middle.add(asn)
+                
+            ases_at_the_ends.add(asns[0])
+            ases_at_the_ends.add(asns[-1])
+                          
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": len(ases_int_the_middle.difference(ases_at_the_ends)),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION34:
+According to collectors 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254, what fraction of IPv4-announcing ASes also announced IPv6 prefixes on 5/20/26?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer29.json"
+size = 0
+time = 0
+
+ipv4_ases = set()
+ipv6_ases = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = 4,
+    ) 
+
+for vantage_point in selected_vantage_points:
+   
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        if not prefix_data:
+            continue
+
+        for prefix, entry in prefix_data.items():
+            if not isinstance(entry, list):
+                continue
+
+            as_path = entry[0]
+            
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) == 0:
+                continue
+            ipv4_ases.add(asns[-1])
+            
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = 6,
+    ) 
+
+for vantage_point in selected_vantage_points:
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+        
+        for prefix, entry in prefix_data.items():
+           
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            if len(asns) == 0:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+    
+            ipv6_ases.add(asns[-1])
+            
+common_ases = ipv4_ases.intersection(ipv6_ases)
+ratio = len(common_ases) / len(ipv4_ases) if ipv4_ases else 0
+
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": ratio,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+
+USER QUESTION35:
+Please list the number of BGP announcements observed during every hour by VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 during the period from May 20th, 2026 to May 20th, 2026.
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime, timedelta
+
+
+answer_file = "../../evaluation/eval_results/answer17.json"
+size = 0
+time = 0
+
+hourly_totals = []
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+start_of_day = datetime.strptime(
+    "2026-05-20T00:00:00",
+    "%Y-%m-%dT%H:%M:%S"
+)
+
+end_of_day = datetime.strptime(
+    "2026-05-20T23:59:59",
+    "%Y-%m-%dT%H:%M:%S"
+)
+
+total_hours = int(
+    (end_of_day - start_of_day).total_seconds() / 3600
+) + 1
+
+for hour in range(total_hours):
+    hour_start = start_of_day + timedelta(hours=hour)
+    hour_end = hour_start + timedelta(hours=1) - timedelta(seconds=1)
+
+    hour_key = hour_start.strftime("%Y-%m-%d %H:00:00")
+
+    for vantage_point in selected_vantage_points:
+        update_data = get_updates(
+            [vantage_point],
+            return_community = False,
+            return_aspath = False,
+            start_date=hour_start.strftime("%Y-%m-%dT%H:%M:%S"),
+            end_date=hour_end.strftime("%Y-%m-%dT%H:%M:%S"),
+            return_count=True,
+            type_filter = 'A',
+            details = True,
+            ) 
+
+        bgp_updates = update_data.get("data", {}).get("bgp", {})
+        time_info = update_data.get("seconds")
+        size_info = update_data.get("bytes")
+    
+        size += size_info or 0
+        time += time_info or 0
+    
+        for vp_id, counts in bgp_updates.items():
+            
+            announcements = counts.get("A", 0)
+            
+            bgp2go.add(vantage_point.ip)
+
+            hourly_totals.append({
+                "vp": str(vantage_point.unique_id),
+                "hour": hour_key,
+                'count': announcements
+            })
+                      
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": hourly_totals,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION36:
+What  routing changes were observed for subnet 114.215.0.0/16 by BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 between May 20th, 2026 and May 20th, 2026?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer23.json"
+size = 0
+time = 0
+
+desired_updates = []
+
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'],
+    data_afi =None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+    
+    update_data = get_updates(
+        [vantage_point],
+        return_community = True,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        prefix_exact_match=["114\.215\.0\.0/16"], 
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, update_entries in bgp_updates.items():
+        if not update_entries:
+            continue
+        
+        bgp2go.add(vantage_point.ip)
+        
+        for update in update_entries:
+            desired_updates.append(update)
+            
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": desired_updates,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+            
+
+USER QUESTION37:
+According to VP IPs 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 on 05/20/2026, how many ASes were exclusively observed at AS-path endpoints and never as intermediate ASes?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer8.json"
+
+size = 0
+time = 0
+
+ASes_in_the_middle = set()
+all_ases = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    data_afi = None,
+    ) 
+
+for vantage_point in selected_vantage_points:
+
+    rib_data = get_rib(
+        [vantage_point], 
+        date = "2026-05-20T00:00:00", 
+        return_community = False,
+        details = True,
+        ) 
+
+    bgp_data = rib_data.get("data", {}).get("bgp", {})
+    time_info = rib_data.get("seconds")
+    size_info = rib_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, prefix_data in bgp_data.items():
+       
+        for prefix, entry in prefix_data.items():
+           
+            as_path = entry[0]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            asns = [int(asn) for asn in as_path.split() if asn.isdigit()]
+            
+            for asn in asns:
+                all_ases.add(asn)
+
+            for asn in asns[1:-1]:
+                ASes_in_the_middle.add(asn)
+                            
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": len(all_ases.difference(ASes_in_the_middle)),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+USER QUESTION38:
+What BGP announcements containing large communities were gathered from routers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 from 5/20/26 to 5/20/26?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer21.json"
+size = 0
+time = 0
+
+large_community_regexp = "(^| )[0-9]+:[0-9]+:[0-9]+( |$)"
+bgp2go = set()
+desired_updates = []
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+  
+    update_data = get_updates(
+        [vantage_point],
+        return_community = True,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",
+        community_regexp=large_community_regexp,
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    for vp_id, update_entries in bgp_updates.items():
+        if not update_entries:
+            continue
+        bgp2go.add(vantage_point.ip)
+        for update in update_entries:
+            desired_updates.append(update)
+        
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": desired_updates,
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+            
+            
+
+
+USER QUESTION39:
+Can you identify the AS paths where AS205112 was the final ASN as observed from BGP peers 2001:43f8:6d0::2934, 206.126.110.5, 80.81.194.45, 208.115.136.119, 2001:7f8::8463:0:1, 80.81.192.79, 203.159.68.69, 203.181.248.195, 2001:13c7:7020:300::254 from 5/20/26 to 5/20/26?
+EXECUTABLE PYTHON CODE:
+from pyXoXapi import *
+import os
+import json
+from datetime import datetime
+
+
+answer_file = "../../evaluation/eval_results/answer28.json"
+size = 0
+time = 0
+
+aspaths_set = set()
+bgp2go = set()
+selected_vantage_points = get_vantage_points(
+    vp_ips=['2001:43f8:6d0::2934', '206.126.110.5', '80.81.194.45', '208.115.136.119', '2001:7f8::8463:0:1', '80.81.192.79', '203.159.68.69', '203.181.248.195', '2001:13c7:7020:300::254'], 
+    ) 
+
+for vantage_point in selected_vantage_points:
+   
+    update_data = get_updates(
+        [vantage_point],
+        return_community = False,
+        start_date="2026-05-20T00:00:00",
+        end_date= "2026-05-20T23:59:59",  
+        aspath_regexp='(^| )'+str("205112")+'$',
+        type_filter = 'A',
+        details = True,
+        ) 
+
+    bgp_updates = update_data.get("data", {}).get("bgp", {})
+    time_info = update_data.get("seconds")
+    size_info = update_data.get("bytes")
+    
+    size += size_info or 0
+    time += time_info or 0
+    
+    for vp_id, update_entries in bgp_updates.items():
+        if not update_entries:
+            continue
+        for update in update_entries:
+            as_path = update[3]
+            if not as_path:
+                continue
+            
+            bgp2go.add(vantage_point.ip)
+            aspaths_set.add(as_path)
+            
+output = {
+    "time": time,
+    "size": size,
+    "final_answer": list(aspaths_set),
+    "bgp2go":list(bgp2go)
+}
+
+os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+
+with open(answer_file, "w") as f:
+    json.dump(output, f, indent=2)
+
+
+
+
+
+Function: get_updates
+
+Definition and Usage:
+Returns BGP update messages (announcements and withdrawals) or the number of updates for each vantage point within a specified time range.
+
+Syntax:
+get_updates(vps, start_date, end_date, return_count, max_updates_to_return, type_filter, prefix_filter, prefix_exact_match, return_aspath, aspath_exact_match, aspath_regexp, return_community, community_regexp, chronological_order, details)
+
+Parameters:
+
+• vps: A single VP or list of VPs.
+• start_date: Start time in ISO format YYYY-MM-DDTHH:MM:SS.
+• end_date: End time in ISO format YYYY-MM-DDTHH:MM:SS.
+• prefix_filter: Prefix condition(s).
+• prefix_exact_match: Exact prefix match. (List of prefixes)
+• aspath_exact_match: Exact AS path match.
+• aspath_regexp: Regex filter for AS path. (Regex filter on AS path. Only entries for which the AS patch match the filter will be returned. Internally uses PostgreSQL pattern matching.)
+• return_community: Include communities (default: True).
+• community_regexp: Regex filter for communities. ((less than 100 characters is allowed))
+• max_updates_to_return: Limit number of updates returned.
+• type_filter: Filter update type ("A" or "W").
+• chronological_order: Return updates in chronological order (default: True).
+• return_count: Return count (True) or full updates (False).
+• details: Include extended details.
+
+Return Values:
+
+• If return_count is False:
+A list of dictionaries. Each dictionary contains:
+
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id → list of updates
+
+Each update is:
+
+[timestamp, type, prefix, as_path, communities]
+
+• If return_count is True:
+A list of dictionaries. Each dictionary contains:
+
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id →
+{
+"A": integer (announcements),
+"W": integer (withdrawals)
+}
+
+
+Function: get_rib
+
+Definition and Usage:
+Returns the Routing Information Base (RIB) entries or the number of entries for each vantage point at a specified date.
+
+Syntax:
+get_rib(vps, date, prefix_filter, prefix_exact_match, return_aspath, aspath_exact_match, aspath_regexp, return_community, community_regexp, return_count,details)
+
+Parameters:
+
+• vps: A single VP or list of VPs.
+• date: Date in ISO format YYYY-MM-DDTHH:MM:SS.
+• prefix_filter: Prefix condition(s).
+• prefix_exact_match: Exact prefix match. (List of prefixes)
+• aspath_exact_match: Exact AS path match.
+• aspath_regexp: Regex filter for AS path. (Regex filter on AS path. Only entries for which the AS patch match the filter will be returned. Internally uses PostgreSQL pattern matching.)
+• return_community: Include communities (default: True).
+• community_regexp: Regex filter for communities. (less than 100 characters is allowed)
+• return_count: Return count (True) or full RIB (False).
+• details: Include extended details.
+
+Return Values:
+
+• If return_count is False:
+A list of dictionaries. Each dictionary contains:
+
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id → prefix →
+[as_path, communities]
+
+• If return_count is True:
+A list of dictionaries. Each dictionary contains:
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id → integer (number of entries)
+
+
+
+Function: get_vantage_points
+
+Definition and Usage:
+Returns BGP and BMP vantage points matching given filters, including metadata and optional status information.
+
+Syntax:
+get_vantage_points(vp_ips, data_afi)
+
+Parameters:
+
+• vp_ips: Filter by VP IP addresses.
+
+• data_afi: 4 for IPv4 or 6 for IPv6 or None for both.
+
+Return Values:
+
+A dictionary with:
+
+data:
+bgp: list of BGP vantage points
+
+Each vantage point contains:
+
+• .unique_id: VP ID
+
+==================================================
+TRAINING EXAMPLES END
+==================================================
+
+DO NOT:
+- explain
+- summarize
+- analyze
+- discuss
+- ask questions
+
+DO:
+- directly generate executable Python code
+
+- ALWAYS extract QUESTION_ID and SET_ID exactly from evaluation question metadata
+- ALWAYS define:
+
+question_id = <QUESTION_ID>
+set_id = <SET_ID>
+
+- for regex and pattern matching, adhere to PostgreSQL regex syntax
+
+ALWAYS define:
+
+time
+size
+final_answer
+
+ALWAYS save outputs as:
+
+answer_file = (f"/../../evaluation/eval_results/answer{question_id}.json")

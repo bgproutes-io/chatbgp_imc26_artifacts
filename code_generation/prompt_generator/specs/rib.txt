@@ -1,0 +1,40 @@
+Function: get_rib
+
+Definition and Usage:
+Returns the Routing Information Base (RIB) entries or the number of entries for each vantage point at a specified date.
+
+Syntax:
+get_rib(vps, date, prefix_filter, prefix_exact_match, return_aspath, aspath_exact_match, aspath_regexp, return_community, community_regexp, return_count,details)
+
+Parameters:
+
+• vps: A single VP or list of VPs.
+• date: Date in ISO format YYYY-MM-DDTHH:MM:SS.
+• prefix_filter: Prefix condition(s).
+• prefix_exact_match: Exact prefix match. (List of prefixes)
+• aspath_exact_match: Exact AS path match.
+• aspath_regexp: Regex filter for AS path. (Regex filter on AS path. Only entries for which the AS patch match the filter will be returned. Internally uses PostgreSQL pattern matching.)
+• return_community: Include communities (default: True).
+• community_regexp: Regex filter for communities. (less than 100 characters is allowed)
+• return_count: Return count (True) or full RIB (False).
+• details: Include extended details.
+
+Return Values:
+
+• If return_count is False:
+A list of dictionaries. Each dictionary contains:
+
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id → prefix →
+[as_path, communities]
+
+• If return_count is True:
+A list of dictionaries. Each dictionary contains:
+seconds: Query execution time
+bytes: Response size
+info: Status of VPs (bgp/bmp)
+data:
+bgp/bmp → vp_id → integer (number of entries)
