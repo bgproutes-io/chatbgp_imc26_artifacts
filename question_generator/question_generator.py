@@ -206,11 +206,14 @@ def format_parameter(param_name: str,value: Any) -> str:
 # QUESTION GENERATOR
 # ============================================================
 
-def generate_questions(question_templates,dataset):
+def generate_questions(question_templates, dataset):
 
     generated = {}
 
-    for category, groups in (question_templates.items()):
+    for question_id, (category, groups) in enumerate(
+        question_templates.items(),
+        start=1
+    ):
 
         generated[category] = {}
 
@@ -224,6 +227,10 @@ def generate_questions(question_templates,dataset):
 
             for row in dataset:
 
+                # ONLY use rows from SAME question generator
+                if row.get("question_id") != question_id:
+                    continue
+
                 missing = [p for p in required if p not in row]
 
                 if not missing:
@@ -231,13 +238,19 @@ def generate_questions(question_templates,dataset):
 
             for row in valid_rows:
 
-                replacements = {p: format_parameter(p,row[p]) for p in required}
+                replacements = {
+                    p: format_parameter(p, row[p])
+                    for p in required
+                }
 
                 for template in templates:
 
                     question = template.format(**replacements)
 
-                    generated[category][question] = {p: row[p] for p in required}
+                    generated[category][question] = {
+                        p: row[p]
+                        for p in required
+                    }
 
     return generated
 
