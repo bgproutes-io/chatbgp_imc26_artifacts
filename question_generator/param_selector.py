@@ -2,6 +2,7 @@ import json
 import random
 from collections import defaultdict
 from pathlib import Path
+
 # =========================================================
 # CONFIGURATION
 # =========================================================
@@ -20,6 +21,8 @@ RANDOM_SEED = 13
 MAX_ITEMS_PER_VP = 10000
 
 random.seed(RANDOM_SEED)
+
+seen_counts = defaultdict(int)
 # =========================================================
 # GLOBAL DATA
 # =========================================================
@@ -73,9 +76,8 @@ community_asx = defaultdict(list)
 # =========================================================
 # MEMORY SAFE APPEND
 # =========================================================
-
 def bounded_append(container, key, value):
-
+    
     """
     Reservoir-style bounded storage.
 
@@ -83,21 +85,21 @@ def bounded_append(container, key, value):
     frequency distribution while limiting memory.
     """
 
+    counter_key = (id(container), key)
+
+    seen_counts[counter_key] += 1
+    seen = seen_counts[counter_key]
+
     lst = container[key]
 
-    current_size = len(lst)
-
-    # Fill until capacity
-    if current_size < MAX_ITEMS_PER_VP:
+    if len(lst) < MAX_ITEMS_PER_VP:
         lst.append(value)
         return
 
-    # Replace uniformly
-    replace_idx = random.randint(0,current_size)
+    replace_idx = random.randint(0, seen - 1)
 
     if replace_idx < MAX_ITEMS_PER_VP:
-        lst[replace_idx] = value
-        
+        lst[replace_idx] = value    
 # =========================================================
 # LOAD DATASET
 # =========================================================
