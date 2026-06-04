@@ -4,9 +4,7 @@ import logging
 from pathlib import Path
 from datetime import datetime
 from typing import Dict,Any
-
 from param_selector import QUESTION_FUNCTIONS
-
 
 # ============================================================
 # CONFIGURATION
@@ -81,11 +79,7 @@ def randomize_time_text(time_input: str) -> str:
         e = format_datetime_variants(end_dt)
 
         templates = [
-
-            f"between {s['time_12h']} on {s['long_date']} and {e['time_12h']} on {e['long_date']}",
-
-            f"from {s['time_12h']} on {s['long_date']} to {e['time_12h']} on {e['long_date']}",
-
+            
             f"during the period from {s['long_date']} to {e['long_date']}",
 
             f"over the interval between {s['long_date']} and {e['long_date']}",
@@ -93,14 +87,6 @@ def randomize_time_text(time_input: str) -> str:
             f"between {s['long_date']} and {e['long_date']}",
 
             f"from {s['shorter_date']} to {e['shorter_date']}",
-
-            f"throughout the time window starting {s['time_12h']} on {s['long_date']} and ending {e['time_12h']} on {e['long_date']}",
-
-            f"within the interval {s['shorter_date']} - {e['shorter_date']}",
-
-            f"during the time frame from {s['time_full']} on {s['long_date']} to {e['time_full']} on {e['long_date']}",
-
-            f"across the period beginning {s['long_date']} and concluding {e['long_date']}",
         ]
 
         return random.choice(
@@ -112,14 +98,8 @@ def randomize_time_text(time_input: str) -> str:
     t = format_datetime_variants(dt)
 
     templates = [
-
+        
         f"on {t['long_date']}",
-
-        f"on {t['long_date']} at {t['time_12h']}",
-
-        f"at {t['time_12h']} on {t['long_date']}",
-
-        f"as of {t['time_12h']} on {t['long_date']}",
 
         f"during {t['long_date']}",
 
@@ -127,15 +107,9 @@ def randomize_time_text(time_input: str) -> str:
 
         f"on {t['shorter_date']}",
 
-        f"on {t['shorter_date']} at {t['time_12h']}",
-
         f"at {t['time_full']} on {t['long_date']}",
 
-        f"around {t['time_12h']} on {t['long_date']}",
-
         f"throughout {t['long_date']}",
-
-        f"on the evening of {t['long_date']}",
     ]
 
     return random.choice(
