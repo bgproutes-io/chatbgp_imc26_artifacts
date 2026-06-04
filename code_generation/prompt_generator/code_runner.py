@@ -147,7 +147,7 @@ def main():
     set_number = args.set
     
     EVALUATION_FILE = (
-        f"../../question_generator/eval_questions/evaluation_set_{set_number}.json"
+        f"../../question_generator/eval_questions/evaluation_set_{set_number}.json" # set number to run different sets of questions (by default: set_number==1)
     )
     
     print(f"SET={set_number}")
