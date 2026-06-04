@@ -213,6 +213,7 @@ def main():
                 i
             )
 
+# optional: cleaning python codes from /tmp directory
 """
 for filename in os.listdir(TMP_DIR):
 
