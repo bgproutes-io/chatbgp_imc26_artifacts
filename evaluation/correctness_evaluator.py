@@ -22,7 +22,7 @@ def load_result(method, qid):
         return json.load(f)
 
 # =====================================================
-# NORMALIZATION FOR FLOAT/INTEGER 
+# NORMALIZATION FOR FLOAT/INTEGER
 # =====================================================
 
 def normalize(value):
@@ -50,7 +50,6 @@ def final_answer_to_set(answer):
         return set()
 
     if isinstance(value, (list, set)):
-
         return {normalize(v) for v in value}
 
     return {normalize(value)}
@@ -68,12 +67,14 @@ def jaccard_similarity(a, b):
 
 # =====================================================
 # FIND AVAILABLE QUESTIONS
+# Uses union of both folders so missing files are detected
 # =====================================================
 
-question_ids = sorted([
+question_ids = sorted({
     int(f.stem.replace("answer", ""))
-    for f in (DATA_DIR / METHOD_1).glob("answer*.json")
-])
+    for method in [METHOD_1, METHOD_2]
+    for f in (DATA_DIR / method).glob("answer*.json")
+})
 
 # =====================================================
 # EVALUATION
@@ -92,46 +93,51 @@ for qid in question_ids:
     result1 = load_result(METHOD_1, qid)
     result2 = load_result(METHOD_2, qid)
 
+    # only missing files -> not answered
     if result1 is None or result2 is None:
-        continue
-
-    set1 = final_answer_to_set(result1)
-    set2 = final_answer_to_set(result2)
-
-    # empty answer
-    if len(set2) == 0:
 
         sim = 0
         not_answered += 1
         category = "Not answered"
 
+        similarities.append(sim)
+
+        print(f"Q{qid}: {sim:.3f} ({category})")
+
+        continue
+
+    set1 = final_answer_to_set(result1)
+    set2 = final_answer_to_set(result2)
+
+    sim = jaccard_similarity(set1, set2)
+
+    if sim == 1.0:
+
+        perfect += 1
+        category = "Perfect match"
+
+    elif sim >= 0.8:
+
+        high += 1
+        category = "High similarity"
+
+    elif sim >= 0.5:
+
+        medium += 1
+        category = "Medium similarity"
+
     else:
 
-        sim = jaccard_similarity(set1, set2)
-
-        if sim == 1.0:
-
-            perfect += 1
-            category = "Perfect match"
-
-        elif sim >= 0.8:
-
-            high += 1
-            category = "High similarity"
-
-        elif sim >= 0.5:
-
-            medium += 1
-            category = "Medium similarity"
-
-        else:
-
-            incorrect += 1
-            category = "Incorrect"
+        incorrect += 1
+        category = "Incorrect"
 
     similarities.append(sim)
 
     print(f"Q{qid}: {sim:.3f} ({category})")
+
+# =====================================================
+# SUMMARY
+# =====================================================
 
 total = len(similarities)
 
