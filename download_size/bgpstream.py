@@ -18,11 +18,25 @@ OUTPUT_PATH = BASE_DIR
 
 BASELINE_FILE = BASE_DIR / f"../question_generator/baseline_metrics_{NUMBER_OF_VPS}.json"
 
+# Use this when you run question_generator/param_collector.py. Otherwise, you can manually add VP_IPs
+"""
 with open(BASELINE_FILE, "r", encoding="utf-8") as f:
     baseline_data = json.load(f)
 
 VP_IPs = baseline_data["vantage_points"]
-
+"""
+VP_IPs =  [
+    "2001:13c7:7020:300::254",
+    "2001:7f8::8463:0:1",
+    "2001:43f8:6d0::2934",
+    "208.115.136.119",
+    "206.126.110.5",
+    "80.81.192.79",
+    "80.81.194.45",
+    "203.159.68.69",
+    "203.181.248.195",
+    "2a14:7580:9011::"
+  ]
 # =========================================================
 # GLOBAL CACHE
 # =========================================================
