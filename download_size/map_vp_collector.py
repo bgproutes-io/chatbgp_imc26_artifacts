@@ -11,7 +11,7 @@ from probes_list import probes
 DATA_PATH = Path("./target_path")
 PROBES = probes
 NUM_WORKERS = 10
-DATE = "20260527"  #YYYYMMDD
+DATE = "20260520"  #YYYYMMDD
 DATA_PATH.mkdir(exist_ok=True)
 
 # =====================================================
