@@ -17,29 +17,43 @@ OUTPUT_PATH = Path("./")
 # =========================================================
 # GLOBAL CACHE
 # =========================================================
-
 SIZE_CACHE = {}
-DIRECTORY_CACHE = {}
 
-def get_timeframe_sizes(collectors,end_date,days):
+def get_timeframe_sizes(
+    collectors,
+    end_date,
+    days
+):
 
     total_rib_mb = 0.0
     total_updates_mb = 0.0
 
-    end_dt = datetime.strptime(end_date,"%Y%m%d")
+    end_dt = datetime.strptime(
+        end_date,
+        "%Y%m%d"
+    )
 
     for i in range(days):
 
         current_dt = end_dt - timedelta(days=i)
 
-        current_date = current_dt.strftime("%Y%m%d")
+        current_date = current_dt.strftime(
+            "%Y%m%d"
+        )
 
-        print(f"\nProcessing timeframe date: "f"{current_date}")
+        print(
+            f"\nProcessing timeframe date: "
+            f"{current_date}"
+        )
 
         for collector in collectors:
 
             try:
-                cache_key = (collector,current_date)
+
+                cache_key = (
+                    collector,
+                    current_date
+                )
 
                 # =====================================
                 # CACHE LOOKUP
@@ -47,18 +61,36 @@ def get_timeframe_sizes(collectors,end_date,days):
 
                 if cache_key not in SIZE_CACHE:
 
-                    rib_size = get_rib_size(collector,current_date)
+                    rib_size = get_rib_size(
+                        collector,
+                        current_date
+                    )
 
-                    updates_size = get_updates_size(collector,current_date)
+                    updates_size = get_updates_size(
+                        collector,
+                        current_date
+                    )
 
-                    SIZE_CACHE[cache_key] = {"rib": rib_size,"updates": updates_size}
+                    SIZE_CACHE[cache_key] = {
+                        "rib": rib_size,
+                        "updates": updates_size
+                    }
 
-                total_rib_mb += (SIZE_CACHE[cache_key]["rib"])
+                total_rib_mb += (
+                    SIZE_CACHE[cache_key]["rib"]
+                )
 
-                total_updates_mb += (SIZE_CACHE[cache_key]["updates"])
+                total_updates_mb += (
+                    SIZE_CACHE[cache_key]["updates"]
+                )
 
             except Exception as e:
-                print(f"Timeframe error "f"{collector} {current_date}")
+
+                print(
+                    f"Timeframe error "
+                    f"{collector} {current_date}"
+                )
+
                 print(e)
 
     return (
@@ -66,26 +98,29 @@ def get_timeframe_sizes(collectors,end_date,days):
         round(total_updates_mb, 2)
     )
 
-def get_directory_listing(url):
 
-    if url in DIRECTORY_CACHE:
-        return DIRECTORY_CACHE[url]
+def get_directory_listing(url):
 
     try:
 
+        cmd = f'curl -s "{url}"'
+
         result = subprocess.check_output(
-            f'curl -s "{url}"',
+            cmd,
             shell=True,
             text=True
         )
 
-        DIRECTORY_CACHE[url] = result
-
         return result
 
-    except Exception:
+    except Exception as e:
+
+        print(f"Error fetching URL: {url}")
+
+        print(e)
 
         return ""
+
 
 def convert_to_mb(size_str):
 
@@ -101,6 +136,7 @@ def convert_to_mb(size_str):
         return float(size_str[:-1]) * 1024
 
     return 0.0
+
 
 def get_rib_size(collector, date):
 
@@ -118,26 +154,45 @@ def get_rib_size(collector, date):
 
         if collector.startswith("rrc"):
 
-            url = (f"https://data.ris.ripe.net/"f"{collector}/{year}.{month}/")
+            url = (
+                f"https://data.ris.ripe.net/"
+                f"{collector}/{year}.{month}/"
+            )
 
             html = get_directory_listing(url)
 
-            pattern = (rf'bview\.{year}{month}{day}\.0000\.gz'rf'.*?([0-9\.]+[KMG])')
+            pattern = (
+                rf'bview\.{year}{month}{day}\.0000\.gz'
+                rf'.*?([0-9\.]+[KMG])'
+            )
+
         # =====================================================
         # ROUTEVIEWS
         # =====================================================
+
         else:
 
-            url = (f"http://archive.routeviews.org/"f"{collector}/bgpdata/"f"{year}.{month}/RIBS/")
-            
+            url = (
+                f"http://archive.routeviews.org/"
+                f"{collector}/bgpdata/"
+                f"{year}.{month}/RIBS/"
+            )
+
             html = get_directory_listing(url)
 
-            pattern = (rf'rib\.{year}{month}{day}\.0000\.bz2'rf'.*?([0-9\.]+[KMG])')
+            pattern = (
+                rf'rib\.{year}{month}{day}\.0000\.bz2'
+                rf'.*?([0-9\.]+[KMG])'
+            )
 
-        matches = re.findall(pattern,html,re.DOTALL)
+        matches = re.findall(
+            pattern,
+            html,
+            re.DOTALL
+        )
 
         for size_str in matches:
-            
+
             total_mb += convert_to_mb(size_str)
 
         return round(total_mb, 2)
@@ -148,63 +203,85 @@ def get_rib_size(collector, date):
 
         return 0.0
 
-def get_updates_size(collector,start_date,end_date=None):
 
-    if end_date is None:
-        end_date = start_date
+def get_updates_size(collector, date):
 
-    start_dt = datetime.strptime(start_date,"%Y%m%d")
-
-    end_dt = datetime.strptime(end_date,"%Y%m%d")
+    year = date[:4]
+    month = date[4:6]
+    day = date[6:8]
 
     total_mb = 0.0
 
-    current_dt = start_dt
+    try:
 
-    while current_dt <= end_dt:
+        # =====================================================
+        # RIPE RIS
+        # =====================================================
 
-        date = current_dt.strftime("%Y%m%d")
+        if collector.startswith("rrc"):
 
-        year = date[:4]
-        month = date[4:6]
-        day = date[6:8]
+            url = (
+                f"https://data.ris.ripe.net/"
+                f"{collector}/{year}.{month}/"
+            )
 
-        try:
+            pattern = (
+                rf'updates\.{year}{month}{day}\.\d+\.gz'
+                rf'.*?([0-9\.]+[KMG])'
+            )
 
-            if collector.startswith("rrc"):
+        # =====================================================
+        # ROUTEVIEWS
+        # =====================================================
 
-                url = (f"https://data.ris.ripe.net/"f"{collector}/{year}.{month}/")
+        else:
 
-                pattern = (rf"updates\.{year}{month}{day}\.\d+\.gz"rf".*?([0-9\.]+[KMG])")
-                
-            else:
+            url = (
+                f"http://archive.routeviews.org/"
+                f"{collector}/bgpdata/"
+                f"{year}.{month}/UPDATES/"
+            )
 
-                url = (f"http://archive.routeviews.org/"f"{collector}/bgpdata/"f"{year}.{month}/UPDATES/")
+            pattern = (
+                rf'updates\.{year}{month}{day}\.\d+\.bz2'
+                rf'.*?([0-9\.]+[KMG])'
+            )
 
-                pattern = (rf"updates\.{year}{month}{day}\.\d+\.bz2"rf".*?([0-9\.]+[KMG])")
+        html = get_directory_listing(url)
 
-            html = get_directory_listing(url)
+        matches = re.findall(
+            pattern,
+            html,
+            re.DOTALL
+        )
 
-            matches = re.findall(pattern,html,re.DOTALL)
+        for size_str in matches:
 
-            for size_str in matches:
+            total_mb += convert_to_mb(size_str)
 
-                total_mb += convert_to_mb(size_str)
+        return round(total_mb, 2)
 
-        except Exception as e:
+    except Exception as e:
 
-            print(f"UPDATES ERROR "f"{collector} {date}")
-            print(e)
+        print(f"UPDATES ERROR {collector}: {e}")
 
-        current_dt += timedelta(days=1)
+        return 0.0
 
-    return round(total_mb,2)
 
-def map_vp_to_collectors(date,target_vps):
+def map_vp_to_collectors(
+    date,
+    target_vps
+):
 
     results = []
 
-    csv_files = glob.glob(f"{DATA_PATH}/{date}/*.csv")
+    csv_files = glob.glob(
+        f"{DATA_PATH}/{date}/*.csv"
+    )
+
+    print(
+        f"\nFound {len(csv_files)} collector files"
+    )
 
     collector_size_cache = {}
 
@@ -218,65 +295,105 @@ def map_vp_to_collectors(date,target_vps):
 
         try:
 
-            collector = os.path.basename(csv_file).replace(".csv", "")
+            collector = os.path.basename(
+                csv_file
+            ).replace(".csv", "")
+
             # =================================================
             # SKIP GENERATED FILES
             # =================================================
+
             if collector.startswith("vp_"):
                 continue
+
             # =================================================
             # READ ONLY REQUIRED COLUMN
             # =================================================
-            chunks = pd.read_csv(csv_file,usecols=["IP"],chunksize=100000)
+
+            chunks = pd.read_csv(
+                csv_file,
+                usecols=["IP"],
+                chunksize=100000
+            )
 
             collector_has_target_vp = False
 
             for chunk in chunks:
 
-                found = chunk[chunk["IP"].isin(target_vps)]
+                found = chunk[
+                    chunk["IP"].isin(target_vps)
+                ]
 
                 if not found.empty:
+
                     collector_has_target_vp = True
                     break
 
             # =================================================
             # SKIP COLLECTOR IF NO TARGET VPS
             # =================================================
+
             if not collector_has_target_vp:
+
                 continue
-            
+
             print(f"\nProcessing {collector}")
+
             # =================================================
             # LOAD COLLECTOR SIZE ONLY IF NEEDED
             # =================================================
+
             if collector not in collector_size_cache:
 
-                rib_size = get_rib_size(collector,date)
+                rib_size = get_rib_size(
+                    collector,
+                    date
+                )
 
-                updates_size = get_updates_size(collector,date)
+                updates_size = get_updates_size(
+                    collector,
+                    date
+                )
 
-                collector_size_cache[collector] = {"RIB_Size_MB": rib_size,"UPDATE_Size_MB": updates_size}
+                collector_size_cache[collector] = {
+                    "RIB_Size_MB": rib_size,
+                    "UPDATE_Size_MB": updates_size
+                }
+
                 print(
                     f"RIB={rib_size} MB | "
                     f"UPDATES={updates_size} MB"
                 )
+
             # =================================================
             # RE-READ FULL CSV
             # =================================================
 
-            chunks = pd.read_csv(csv_file,chunksize=100000)
-            
+            chunks = pd.read_csv(
+                csv_file,
+                chunksize=100000
+            )
+
             for chunk in chunks:
 
                 if "Probe" in chunk.columns:
-                    chunk = chunk.rename(columns={"Probe": "Collector"})
 
-                filtered = chunk[chunk["IP"].isin(target_vps)]
+                    chunk = chunk.rename(
+                        columns={
+                            "Probe": "Collector"
+                        }
+                    )
+
+                filtered = chunk[
+                    chunk["IP"].isin(target_vps)
+                ]
 
                 if filtered.empty:
                     continue
 
-                filtered = filtered.drop_duplicates(subset=["IP"])
+                filtered = filtered.drop_duplicates(
+                    subset=["IP"]
+                )
 
                 for _, row in filtered.iterrows():
 
@@ -296,10 +413,15 @@ def map_vp_to_collectors(date,target_vps):
 
         except Exception as e:
 
-            print(f"Error processing "f"{csv_file}")
+            print(
+                f"Error processing "
+                f"{csv_file}"
+            )
+
             print(e)
 
     return pd.DataFrame(results)
+
 
 def compute_vp_metrics(df, date):
 
@@ -307,43 +429,105 @@ def compute_vp_metrics(df, date):
 
     grouped = df.groupby("VP_IP")
 
-    for _, vp_df in grouped:
+    for vp_ip, vp_df in grouped:
 
-        unique_collectors = vp_df.drop_duplicates(subset=["Collector"])
+        print(
+            f"\n================================"
+        )
 
-        unique_collector_names = unique_collectors["Collector"].unique()
+        print(
+            f"Computing metrics for VP: "
+            f"{vp_ip}"
+        )
+
+        print(
+            f"================================"
+        )
+
+        unique_collectors = vp_df.drop_duplicates(
+            subset=["Collector"]
+        )
+
+        unique_collector_names = unique_collectors[
+            "Collector"
+        ].unique()
+
         # =====================================================
         # CURRENT DAY TOTALS
         # =====================================================
-        total_unique_rib = round(unique_collectors["RIB_Size_MB"].sum(),2)
 
-        total_unique_updates = round(unique_collectors["UPDATE_Size_MB"].sum(),2)
+        total_unique_rib = round(
+            unique_collectors[
+                "RIB_Size_MB"
+            ].sum(),
+            2
+        )
+
+        total_unique_updates = round(
+            unique_collectors[
+                "UPDATE_Size_MB"
+            ].sum(),
+            2
+        )
+
         # =====================================================
         # 30 DAY TOTALS
         # =====================================================
-        (total_rib_30d,total_updates_30d) = get_timeframe_sizes(unique_collector_names,date,30)
-        
+
+        (
+            total_rib_30d,
+            total_updates_30d
+        ) = get_timeframe_sizes(
+            unique_collector_names,
+            date,
+            30
+        )
+
         # =====================================================
         # 10 DAY UPDATE TOTALS
         # =====================================================
-        (_,total_updates_10d) = get_timeframe_sizes(unique_collector_names,date,10)
+
+        (
+            _,
+            total_updates_10d
+        ) = get_timeframe_sizes(
+            unique_collector_names,
+            date,
+            10
+        )
+
         # =====================================================
         # ADD METRICS
         # =====================================================
+
         vp_df = vp_df.copy()
-        vp_df["TOTAL_UNIQUE_RIB_MB"] = (total_unique_rib)
 
-        vp_df["TOTAL_UNIQUE_UPDATES_MB"] = (total_unique_updates)
+        vp_df["TOTAL_UNIQUE_RIB_MB"] = (
+            total_unique_rib
+        )
 
-        vp_df["TOTAL_UNIQUE_RIB_30D_MB"] = (total_rib_30d)
+        vp_df["TOTAL_UNIQUE_UPDATES_MB"] = (
+            total_unique_updates
+        )
 
-        vp_df["TOTAL_UNIQUE_UPDATES_30D_MB"] = (total_updates_30d)
+        vp_df["TOTAL_UNIQUE_RIB_30D_MB"] = (
+            total_rib_30d
+        )
 
-        vp_df["TOTAL_UNIQUE_UPDATES_10D_MB"] = (total_updates_10d)
+        vp_df["TOTAL_UNIQUE_UPDATES_30D_MB"] = (
+            total_updates_30d
+        )
+
+        vp_df["TOTAL_UNIQUE_UPDATES_10D_MB"] = (
+            total_updates_10d
+        )
 
         results.append(vp_df)
-        
-    return pd.concat(results,ignore_index=True)
+
+    return pd.concat(
+        results,
+        ignore_index=True
+    )
 
 if __name__ == "__main__":
     
@@ -351,7 +535,7 @@ if __name__ == "__main__":
     # =================================================
     # FIND ALL QUESTION FILES
     # =================================================
-    optimized_answers = sorted(glob.glob(f"{QUESTION_PATH}/answer*.json"))
+    optimized_answers = sorted(QUESTION_PATH.glob("answer*.json"))
 
     # =================================================
     # PROCESS QUESTIONS
@@ -359,7 +543,7 @@ if __name__ == "__main__":
 
     for ans in optimized_answers:
 
-        filename = os.path.basename(ans)
+        filename = ans.name
 
         match = re.search(r'answer(\d+)\.json',filename)
 
@@ -434,5 +618,4 @@ if __name__ == "__main__":
         
     final_df = final_df.sort_values(by="QUESTION_ID").reset_index(drop=True)
 
-    OUTPUT_PATH.mkdir(parents=True,exist_ok=True)
     final_df.to_csv(f"{OUTPUT_PATH}/"f"bgp2go.csv",index=False)
