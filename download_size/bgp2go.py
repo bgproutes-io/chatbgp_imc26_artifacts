@@ -415,7 +415,15 @@ def map_vp_to_collectors(
 
             print(e)
 
-    return pd.DataFrame(results)
+    return pd.DataFrame(
+    results,
+    columns=[
+        "VP_IP",
+        "Collector",
+        "RIB_Size_MB",
+        "UPDATE_Size_MB"
+        ]
+    )
 
 
 def compute_vp_metrics(df, date):
