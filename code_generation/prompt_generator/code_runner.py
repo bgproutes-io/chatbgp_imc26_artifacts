@@ -139,7 +139,7 @@ def main():
     parser.add_argument(
         "--set",
         type=int,
-        required=True,
+        default=1,
         help="Evaluation set number"
     )
 
