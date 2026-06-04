@@ -1,0 +1,11 @@
+{
+  "time": 120.97908020019531,
+  "size": 8790,
+  "final_answer": {
+    "status": "connected",
+    "date": null
+  },
+  "bgp2go": [
+    "2001:13c7:7020:300::254"
+  ]
+}
