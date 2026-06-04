@@ -41,11 +41,6 @@ def get_timeframe_sizes(
             "%Y%m%d"
         )
 
-        print(
-            f"\nProcessing timeframe date: "
-            f"{current_date}"
-        )
-
         for collector in collectors:
 
             try:

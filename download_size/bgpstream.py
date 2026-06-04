@@ -1,16 +1,14 @@
-from pathlib import Path
-import json
-import subprocess
+import os
 import re
 import glob
+import subprocess
 import pandas as pd
+import json
+from pathlib import Path
 from datetime import datetime, timedelta
 
-DATE = "20260520"
+DATE = "20260520" # Date being used in Question
 NUMBER_OF_VPS = 10
-
-LONG_TIMEFRAME_DAYS = 30
-SHORT_TIMEFRAME_DAYS = 10
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -25,35 +23,108 @@ with open(BASELINE_FILE, "r", encoding="utf-8") as f:
 
 VP_IPs = baseline_data["vantage_points"]
 
-directory_cache = {}
+# =========================================================
+# GLOBAL CACHE
+# =========================================================
+SIZE_CACHE = {}
 
-# =====================================================
-# DIRECTORY CACHE
-# =====================================================
+def get_timeframe_sizes(
+    collectors,
+    end_date,
+    days
+):
+
+    total_rib_mb = 0.0
+    total_updates_mb = 0.0
+
+    end_dt = datetime.strptime(
+        end_date,
+        "%Y%m%d"
+    )
+
+    for i in range(days):
+
+        current_dt = end_dt - timedelta(days=i)
+
+        current_date = current_dt.strftime(
+            "%Y%m%d"
+        )
+
+        for collector in collectors:
+
+            try:
+
+                cache_key = (
+                    collector,
+                    current_date
+                )
+
+                # =====================================
+                # CACHE LOOKUP
+                # =====================================
+
+                if cache_key not in SIZE_CACHE:
+
+                    rib_size = get_rib_size(
+                        collector,
+                        current_date
+                    )
+
+                    updates_size = get_updates_size(
+                        collector,
+                        current_date
+                    )
+
+                    SIZE_CACHE[cache_key] = {
+                        "rib": rib_size,
+                        "updates": updates_size
+                    }
+
+                total_rib_mb += (
+                    SIZE_CACHE[cache_key]["rib"]
+                )
+
+                total_updates_mb += (
+                    SIZE_CACHE[cache_key]["updates"]
+                )
+
+            except Exception as e:
+
+                print(
+                    f"Timeframe error "
+                    f"{collector} {current_date}"
+                )
+
+                print(e)
+
+    return (
+        round(total_rib_mb, 2),
+        round(total_updates_mb, 2)
+    )
+
 
 def get_directory_listing(url):
 
-    if url in directory_cache:
-        return directory_cache[url]
-
     try:
 
+        cmd = f'curl -s "{url}"'
+
         result = subprocess.check_output(
-            ["curl", "-s", url],
+            cmd,
+            shell=True,
             text=True
         )
 
-        directory_cache[url] = result
-
         return result
 
-    except Exception:
+    except Exception as e:
+
+        print(f"Error fetching URL: {url}")
+
+        print(e)
 
         return ""
 
-# =====================================================
-# SIZE CONVERSION
-# =====================================================
 
 def convert_to_mb(size_str):
 
@@ -62,193 +133,451 @@ def convert_to_mb(size_str):
     if size_str.endswith("K"):
         return float(size_str[:-1]) / 1024
 
-    elif size_str.endswith("M"):
+    if size_str.endswith("M"):
         return float(size_str[:-1])
 
-    elif size_str.endswith("G"):
+    if size_str.endswith("G"):
         return float(size_str[:-1]) * 1024
 
     return 0.0
 
-# =====================================================
-# RIB SIZE (single date)
-# =====================================================
 
-def get_rib_size(collector,date):
+def get_rib_size(collector, date):
 
     year = date[:4]
     month = date[4:6]
     day = date[6:8]
 
+    total_mb = 0.0
+
     try:
+
+        # =====================================================
+        # RIPE RIS
+        # =====================================================
 
         if collector.startswith("rrc"):
 
-            url = (f"https://data.ris.ripe.net/"f"{collector}/{year}.{month}/")
-
-            pattern = (rf"bview\.{year}{month}{day}\.0000\.gz"rf".*?([0-9\.]+[KMG])")
-
-        else:
-
-            url = (f"http://archive.routeviews.org/"f"{collector}/bgpdata/"f"{year}.{month}/RIBS/")
-
-            pattern = (rf"rib\.{year}{month}{day}\.0000\.bz2"rf".*?([0-9\.]+[KMG])")
-
-        html = get_directory_listing(url)
-
-        matches = re.findall(pattern,html,re.DOTALL)
-
-        return round(sum(convert_to_mb(x)for x in matches),2) # Size download size from Collector in MB 
-
-    except Exception:
-
-        return 0.0
-
-# =====================================================
-# UPDATE SIZE (INTERVAL)
-# =====================================================
-
-def get_updates_size(collector,start_date,end_date):
-
-    start_dt = datetime.strptime(start_date,"%Y%m%d")
-
-    end_dt = datetime.strptime(end_date,"%Y%m%d")
-
-    total_mb = 0.0
-
-    current_dt = start_dt
-
-    while current_dt <= end_dt:
-
-        date = current_dt.strftime("%Y%m%d")
-
-        year = date[:4]
-        month = date[4:6]
-        day = date[6:8]
-
-        try:
-
-            if collector.startswith("rrc"):
-
-                url = (f"https://data.ris.ripe.net/"f"{collector}/{year}.{month}/")
-
-                pattern = (rf"updates\.{year}{month}{day}\.\d+\.gz"rf".*?([0-9\.]+[KMG])")
-
-            else:
-
-                url = (f"http://archive.routeviews.org/"f"{collector}/bgpdata/"f"{year}.{month}/UPDATES/")
-
-                pattern = (rf"updates\.{year}{month}{day}\.\d+\.bz2"rf".*?([0-9\.]+[KMG])")
+            url = (
+                f"https://data.ris.ripe.net/"
+                f"{collector}/{year}.{month}/"
+            )
 
             html = get_directory_listing(url)
 
-            matches = re.findall(pattern,html,re.DOTALL)
+            pattern = (
+                rf'bview\.{year}{month}{day}\.0000\.gz'
+                rf'.*?([0-9\.]+[KMG])'
+            )
 
-            for size_str in matches:
+        # =====================================================
+        # ROUTEVIEWS
+        # =====================================================
 
-                total_mb += convert_to_mb(size_str)
+        else:
 
-        except Exception as e:
-            print(e)
+            url = (
+                f"http://archive.routeviews.org/"
+                f"{collector}/bgpdata/"
+                f"{year}.{month}/RIBS/"
+            )
 
-        current_dt += timedelta(days=1)
+            html = get_directory_listing(url)
 
-    return round(total_mb,2)
+            pattern = (
+                rf'rib\.{year}{month}{day}\.0000\.bz2'
+                rf'.*?([0-9\.]+[KMG])'
+            )
 
-# =====================================================
-# TIMEFRAME AGGREGATION
-# =====================================================
+        matches = re.findall(
+            pattern,
+            html,
+            re.DOTALL
+        )
 
-def get_timeframe_sizes(collectors,end_date,days):
+        for size_str in matches:
 
-    total_rib = 0.0
-    total_updates = 0.0
+            total_mb += convert_to_mb(size_str)
 
-    end_dt = datetime.strptime(end_date,"%Y%m%d")
+        return round(total_mb, 2)
 
-    for i in range(days):
+    except Exception as e:
 
-        current = (end_dt - timedelta(days=i)).strftime("%Y%m%d")
+        print(f"RIB ERROR {collector}: {e}")
 
-        for collector in collectors:
+        return 0.0
 
-            total_rib += get_rib_size(collector,current)
 
-            total_updates += get_updates_size(collector,current,current)
+def get_updates_size(collector, date):
 
-    return (round(total_rib, 2),round(total_updates, 2))
+    year = date[:4]
+    month = date[4:6]
+    day = date[6:8]
 
-# =====================================================
-# MAP VPS TO COLLECTORS
-# =====================================================
+    total_mb = 0.0
 
-def map_vp_to_collectors(date,target_vps):
+    try:
+
+        # =====================================================
+        # RIPE RIS
+        # =====================================================
+
+        if collector.startswith("rrc"):
+
+            url = (
+                f"https://data.ris.ripe.net/"
+                f"{collector}/{year}.{month}/"
+            )
+
+            pattern = (
+                rf'updates\.{year}{month}{day}\.\d+\.gz'
+                rf'.*?([0-9\.]+[KMG])'
+            )
+
+        # =====================================================
+        # ROUTEVIEWS
+        # =====================================================
+
+        else:
+
+            url = (
+                f"http://archive.routeviews.org/"
+                f"{collector}/bgpdata/"
+                f"{year}.{month}/UPDATES/"
+            )
+
+            pattern = (
+                rf'updates\.{year}{month}{day}\.\d+\.bz2'
+                rf'.*?([0-9\.]+[KMG])'
+            )
+
+        html = get_directory_listing(url)
+
+        matches = re.findall(
+            pattern,
+            html,
+            re.DOTALL
+        )
+
+        for size_str in matches:
+
+            total_mb += convert_to_mb(size_str)
+
+        return round(total_mb, 2)
+
+    except Exception as e:
+
+        print(f"UPDATES ERROR {collector}: {e}")
+
+        return 0.0
+
+
+def map_vp_to_collectors(
+    date,
+    target_vps
+):
 
     results = []
 
-    collector_cache = {}
-
     csv_files = glob.glob(
-        str(DATA_PATH /date/"*.csv"))
+        f"{DATA_PATH}/{date}/*.csv"
+    )
+
+    print(
+        f"\nFound {len(csv_files)} collector files"
+    )
+
+    collector_size_cache = {}
+
+    # =====================================================
+    # CONVERT TO SET FOR FAST LOOKUP
+    # =====================================================
+
+    target_vps = set(target_vps)
 
     for csv_file in csv_files:
 
-        collector = Path(csv_file).stem
-
-        if collector.startswith("vp_"):
-            continue
-
-        if collector not in collector_cache:
-
-            collector_cache[collector] = {"RIB":get_rib_size(collector,date),"UPDATE":get_updates_size(collector,date,date)}
-            
         try:
 
-            chunks = pd.read_csv(csv_file,chunksize=100000)
+            collector = os.path.basename(
+                csv_file
+            ).replace(".csv", "")
+
+            # =================================================
+            # SKIP GENERATED FILES
+            # =================================================
+
+            if collector.startswith("vp_"):
+                continue
+
+            # =================================================
+            # READ ONLY REQUIRED COLUMN
+            # =================================================
+
+            chunks = pd.read_csv(
+                csv_file,
+                usecols=["IP"],
+                chunksize=100000
+            )
+
+            collector_has_target_vp = False
+
+            for chunk in chunks:
+
+                found = chunk[
+                    chunk["IP"].isin(target_vps)
+                ]
+
+                if not found.empty:
+
+                    collector_has_target_vp = True
+                    break
+
+            # =================================================
+            # SKIP COLLECTOR IF NO TARGET VPS
+            # =================================================
+
+            if not collector_has_target_vp:
+
+                continue
+
+            print(f"\nProcessing {collector}")
+
+            # =================================================
+            # LOAD COLLECTOR SIZE ONLY IF NEEDED
+            # =================================================
+
+            if collector not in collector_size_cache:
+
+                rib_size = get_rib_size(
+                    collector,
+                    date
+                )
+
+                updates_size = get_updates_size(
+                    collector,
+                    date
+                )
+
+                collector_size_cache[collector] = {
+                    "RIB_Size_MB": rib_size,
+                    "UPDATE_Size_MB": updates_size
+                }
+
+                print(
+                    f"RIB={rib_size} MB | "
+                    f"UPDATES={updates_size} MB"
+                )
+
+            # =================================================
+            # RE-READ FULL CSV
+            # =================================================
+
+            chunks = pd.read_csv(
+                csv_file,
+                chunksize=100000
+            )
 
             for chunk in chunks:
 
                 if "Probe" in chunk.columns:
 
-                    chunk = chunk.rename(columns={"Probe":"Collector"})
+                    chunk = chunk.rename(
+                        columns={
+                            "Probe": "Collector"
+                        }
+                    )
 
-                filtered = chunk[chunk["IP"].isin(target_vps)]
+                filtered = chunk[
+                    chunk["IP"].isin(target_vps)
+                ]
 
-                filtered = filtered.drop_duplicates(subset=["IP"])
+                if filtered.empty:
+                    continue
+
+                filtered = filtered.drop_duplicates(
+                    subset=["IP"]
+                )
 
                 for _, row in filtered.iterrows():
 
-                    results.append({"VP_IP":row["IP"],"Collector":collector,"RIB_Size_MB":collector_cache[collector]["RIB"],"UPDATE_Size_MB":collector_cache[collector]["UPDATE"]})
+                    results.append({
+                        "VP_IP": row["IP"],
+                        "Collector": collector,
+                        "RIB_Size_MB":
+                            collector_size_cache[
+                                collector
+                            ]["RIB_Size_MB"],
 
-        except Exception:
-            pass
+                        "UPDATE_Size_MB":
+                            collector_size_cache[
+                                collector
+                            ]["UPDATE_Size_MB"]
+                    })
+
+        except Exception as e:
+
+            print(
+                f"Error processing "
+                f"{csv_file}"
+            )
+
+            print(e)
+
     return pd.DataFrame(results)
 
+
+def compute_vp_metrics(df, date):
+
+    results = []
+
+    grouped = df.groupby("VP_IP")
+
+    for vp_ip, vp_df in grouped:
+
+        print(
+            f"\n================================"
+        )
+
+        print(
+            f"Computing metrics for VP: "
+            f"{vp_ip}"
+        )
+
+        print(
+            f"================================"
+        )
+
+        unique_collectors = vp_df.drop_duplicates(
+            subset=["Collector"]
+        )
+
+        unique_collector_names = unique_collectors[
+            "Collector"
+        ].unique()
+
+        # =====================================================
+        # CURRENT DAY TOTALS
+        # =====================================================
+
+        total_unique_rib = round(
+            unique_collectors[
+                "RIB_Size_MB"
+            ].sum(),
+            2
+        )
+
+        total_unique_updates = round(
+            unique_collectors[
+                "UPDATE_Size_MB"
+            ].sum(),
+            2
+        )
+
+        # =====================================================
+        # 30 DAY TOTALS
+        # =====================================================
+
+        (
+            total_rib_30d,
+            total_updates_30d
+        ) = get_timeframe_sizes(
+            unique_collector_names,
+            date,
+            30
+        )
+
+        # =====================================================
+        # 10 DAY UPDATE TOTALS
+        # =====================================================
+
+        (
+            _,
+            total_updates_10d
+        ) = get_timeframe_sizes(
+            unique_collector_names,
+            date,
+            10
+        )
+
+        # =====================================================
+        # ADD METRICS
+        # =====================================================
+
+        vp_df = vp_df.copy()
+
+        vp_df["TOTAL_UNIQUE_RIB_MB"] = (
+            total_unique_rib
+        )
+
+        vp_df["TOTAL_UNIQUE_UPDATES_MB"] = (
+            total_unique_updates
+        )
+
+        vp_df["TOTAL_UNIQUE_RIB_30D_MB"] = (
+            total_rib_30d
+        )
+
+        vp_df["TOTAL_UNIQUE_UPDATES_30D_MB"] = (
+            total_updates_30d
+        )
+
+        vp_df["TOTAL_UNIQUE_UPDATES_10D_MB"] = (
+            total_updates_10d
+        )
+
+        results.append(vp_df)
+
+    return pd.concat(
+        results,
+        ignore_index=True
+    )
 # =====================================================
 # MAIN
 # =====================================================
 
 if __name__ == "__main__":
-    
+
     df = map_vp_to_collectors(DATE,VP_IPs)
-    
+
     if df.empty:
+
         print("No collectors matched provided VPs")
-        exit()
-    
-    unique_collectors = df.drop_duplicates(subset=["Collector"])
-    
-    collector_names = unique_collectors["Collector"].unique()
-    
-    rib_30d, upd_30d = get_timeframe_sizes(collector_names,DATE,LONG_TIMEFRAME_DAYS)
-    
-    _, upd_10d = get_timeframe_sizes(collector_names,DATE,SHORT_TIMEFRAME_DAYS)
-    
-    df["TOTAL_UNIQUE_RIB_30D_MB"] = rib_30d
-    
-    df["TOTAL_UNIQUE_UPDATES_30D_MB"] = upd_30d
-    
-    df["TOTAL_UNIQUE_UPDATES_10D_MB"] = upd_10d
-    
-    OUTPUT_PATH.mkdir(parents=True,exist_ok=True)
-    df.to_csv(OUTPUT_PATH/"bgpstream.csv",index=False)
+
+        stats = {
+            "NUM_VPS":0,
+            "NUM_COLLECTORS":0,
+            "TOTAL_UNIQUE_RIB_MB":0,
+            "TOTAL_UNIQUE_UPDATES_MB":0,
+            "TOTAL_UNIQUE_RIB_30D_MB":0,
+            "TOTAL_UNIQUE_UPDATES_30D_MB":0,
+            "TOTAL_UNIQUE_UPDATES_10D_MB":0
+        }
+
+    else:
+
+        df = compute_vp_metrics(df,DATE)
+
+        unique_collectors = df.drop_duplicates(subset=["Collector"])
+
+        unique_collector_names = unique_collectors["Collector"].unique()
+
+        (total_rib_30d,total_updates_30d) = get_timeframe_sizes( unique_collector_names,DATE,30)
+
+        (_,total_updates_10d) = get_timeframe_sizes(unique_collector_names,DATE,10) # we only need 10-days update for Q15 for analysis of burst of withdrawals in the past 10 days 
+
+        stats = {
+            "NUM_VPS":df["VP_IP"].nunique(),
+            "NUM_COLLECTORS":unique_collectors["Collector"].nunique(),
+            "TOTAL_UNIQUE_RIB_MB":round(unique_collectors["RIB_Size_MB"].sum(),2),
+            "TOTAL_UNIQUE_UPDATES_MB":round(unique_collectors["UPDATE_Size_MB"].sum(),2),
+            "TOTAL_UNIQUE_RIB_30D_MB":total_rib_30d,
+            "TOTAL_UNIQUE_UPDATES_30D_MB":total_updates_30d,
+            "TOTAL_UNIQUE_UPDATES_10D_MB":total_updates_10d
+        }
+
+    stats_df = pd.DataFrame([stats])
+
+    stats_df.to_csv(OUTPUT_PATH / "bgpstream.csv",index=False)
+
+    print("\nSaved results to:",OUTPUT_PATH / "bgpstream.csv")
