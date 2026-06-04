@@ -1,6 +1,6 @@
-# Artifacts for Submission #52 to IMC 2026
+# Artifacts for Submission #391 to IMC 2026
 
-This repository contains the artifacts accompanying paper submission #52:
+This artifact package corresponds to the one-shot revised version of submission #391:
 
 **"XoX: A System for Fast, Accurate, and Intuitive Querying of Large-Scale BGP Datasets"**
 
