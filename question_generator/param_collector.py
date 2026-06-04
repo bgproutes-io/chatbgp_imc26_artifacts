@@ -121,7 +121,7 @@ metrics = {
 
 def main():
 
-    OUTPUT_DIR.mkdir(parents=True,exist_ok=True)
+    OUTPUT_FILE.mkdir(parents=True,exist_ok=True)
 
     random.seed(RANDOM_SEED)
 
