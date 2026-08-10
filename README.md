@@ -2,7 +2,7 @@
 
 This artifact package corresponds to the one-shot revised version of submission #391, previously submitted as submission #52:
 
-**"XoX: A System for Fast, Accurate, and Intuitive Querying of Large-Scale BGP Datasets"**
+**"ChatBGP: A System for Fast, Accurate, and Intuitive Querying of Large-Scale BGP Datasets"**
 
 The source code is provided exclusively for review purposes. All software remains the intellectual property of the authors and is distributed under an **All Rights Reserved** license.
 
